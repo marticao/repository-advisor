@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Research Data Repository Adviser Prototype</title>
+<style>
+:root {
+  --navy:#17324d; --teal:#00a6a6; --light:#f5fbfb; --cream:#fffdf7;
+  --purple:#7a1b7e; --line:#d9e5ea; --soft:#eef8f8; --gold:#f1b900;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--navy); background:linear-gradient(135deg,#fffdf7 0%,#f1fbfb 80%);
+}
+.app { max-width:1180px; margin:0 auto; padding:36px 24px 48px; }
+.topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.navbar { display:flex; justify-content:space-between; align-items:center; background:white; border:1px solid var(--line); border-radius:18px; padding:14px 22px; margin-bottom:24px; box-shadow:0 8px 20px rgba(21,56,79,.05); position: relative; }
+.logo { font-weight:800; font-size:20px; }
+.navlinks { display:flex; gap:24px; flex-wrap:wrap; }
+.navlinks a { text-decoration:none; color:var(--navy); font-weight:600; }
+.navlinks a.active { color:var(--purple); border-bottom:3px solid var(--purple); padding-bottom:4px; }
+.brand { font-weight:800; font-size:20px; letter-spacing:.2px; }
+.badge { border:1px solid var(--line); border-radius:999px; padding:8px 14px; background:white; color:#5a6b7e; font-size:14px; }
+.grid { display:grid; grid-template-columns:minmax(0,2fr) minmax(280px,1fr); gap:24px; align-items:start; }
+.card { background:white; border:1px solid var(--line); border-radius:28px; padding:34px; box-shadow:0 18px 45px rgba(21,56,79,.08); }
+.side { position:sticky; top:20px; }
+h1 { font-size:48px; line-height:1.06; margin:0 0 18px; }
+h2 { font-size:30px; margin:0 0 16px; }
+h3 { font-size:20px; margin:0 0 10px; }
+p { font-size:17px; line-height:1.55; color:#33485f; }
+.small { font-size:14px; color:#64748b; }
+.button { border:0; background:linear-gradient(135deg,var(--purple),#4b1160); color:white; padding:15px 24px; border-radius:16px; font-weight:800; font-size:16px; cursor:pointer; box-shadow:0 10px 22px rgba(122,27,126,.22); }
+.button.secondary { background:white; color:var(--navy); border:1px solid var(--line); box-shadow:none; }
+.actions { display:flex; gap:12px; margin-top:26px; flex-wrap:wrap; }
+.option { display:block; width:100%; border:1.5px solid var(--line); background:#fff; border-radius:18px; padding:16px 18px; margin:12px 0; cursor:pointer; text-align:left; color:var(--navy); font-size:16px; transition:.15s; }
+.option:hover { border-color:var(--teal); background:#f5ffff; }
+.option.selected { border-color:var(--teal); background:#e9fbfb; box-shadow:inset 0 0 0 1px var(--teal); }
+.progress-wrap { height:10px; background:#edf2f7; border-radius:99px; margin:0 0 28px; overflow:hidden; }
+.progress { height:100%; background:linear-gradient(90deg,var(--teal),var(--purple)); width:0%; }
+.kpis { display:flex; gap:12px; flex-wrap:wrap; margin-top:22px; }
+.kpi { background:var(--soft); border-radius:16px; padding:12px 14px; font-weight:700; font-size:14px; }
+.repo-card { border:1px solid var(--line); border-radius:18px; padding:16px; margin:12px 0; background:#fff; }
+.repo-card strong { display:block; font-size:18px; margin-bottom:4px; }
+.tag { display:inline-block; background:#eef2ff; color:#394984; border-radius:999px; padding:4px 9px; font-size:12px; margin:4px 4px 0 0; }
+.match { font-size:42px; font-weight:900; color:var(--purple); margin:8px 0; }
+.warning { background:#fff7ed; border-left:5px solid #f59e0b; padding:12px 14px; border-radius:12px; margin:14px 0; color:#7c3f00; }
+.rankrow { display:flex; justify-content:space-between; gap:18px; align-items:center; border-bottom:1px solid var(--line); padding:12px 0; }
+.rankrow:last-child { border-bottom:0; }
+.pill { border-radius:999px; background:#eef8f8; padding:6px 10px; font-size:13px; font-weight:800; color:#087a7a; }
+.checkbox-grid { display:grid; grid-template-columns:1fr; gap:10px; width:100%; }
+
+.rec-card { border: 1px solid var(--line); border-radius: 20px; overflow: hidden; margin-bottom: 30px; background: #ffffff; box-shadow: 0 10px 30px rgba(21,56,79,.04); }
+.rec-header { background: linear-gradient(135deg, var(--navy), #0b1a29); color: #ffffff; padding: 22px 28px; }
+.rec-header h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); margin: 0 0 4px; font-weight: 800; }
+.repo-title { font-size: 24px; font-weight: 800; }
+.rec-body { padding: 30px; color: var(--navy); }
+.rec-section-title { font-size: 16px; font-weight: 800; margin-bottom: 20px; color: var(--purple); border-bottom: 2px solid var(--soft); padding-bottom: 6px; }
+.reason-grid { display: flex; flex-direction: column; gap: 16px; }
+.reason-item { display: grid; grid-template-columns: 210px 1fr; padding-bottom: 14px; border-bottom: 1px dashed var(--line); align-items: start; }
+.reason-item:last-child { border-bottom: none; padding-bottom: 0; }
+.reason-label { font-weight: 700; font-size: 14px; color: #5a6b7e; text-transform: uppercase; letter-spacing: 0.3px; }
+.reason-value { font-size: 15px; color: #223345; line-height: 1.45; }
+.feature-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.feature-tags .tag { background: var(--soft); color: var(--teal); border: 1px solid #cbeeed; font-weight: 700; padding: 4px 12px; }
+
+/* Custom Burger Menu Toggle Icon */
+.burger-menu { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--navy); }
+
+@media(max-width:850px){
+  .grid{grid-template-columns:1fr}
+  h1{font-size:36px}
+  .side{position:static}
+  .reason-item { grid-template-columns: 1fr; gap: 4px; }
+  /* Align Burger Menu on the absolute right side */
+  .burger-menu { display: block; order: 2; margin-left: auto; }
+  .logo { order: 1; }
+  .navlinks { display: none; width: 100%; flex-direction: column; gap: 12px; margin-top: 15px; order: 3; }
+  .navlinks.open { display: flex; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="navbar">
+    <div class="logo"><a href="#" style="text-decoration:none;color:inherit;">Data Champions @ CUHK</a></div>
+    <!-- Burger menu link triggers onmobile -->
+    <button class="burger-menu" onclick="document.querySelector('.navlinks').classList.toggle('open')">☰</button>
+    <div class="navlinks">
+      <a href="#" class="active">Repository Advisor</a>
+      <a href="https://libguides.lib.cuhk.edu.hk/rdm/home" target="_blank">RDM Resources</a>
+      <a href="#" target="_blank">RDM Tools</a>
+      <a href="https://cuhkrdm.substack.com/" target="_blank">Data Matters @ CUHK</a>
+    </div>
+  </div>
+
+  <div class="grid">
+    <main class="card" id="main"></main>
+    <aside class="card side" id="side"></aside>
+  </div>
+</div>
+
+<!-- Added clear left padding to match grid alignment borders -->
+<footer style="margin-top:36px; padding:24px; border-top:1px solid #d9e5ea; font-size:14px; color:#64748b; max-width:1180px; margin-left:auto; margin-right:auto;">
+<strong>Data Champions @ CUHK</strong><br>
+Repository Advisor is a Data Champions @ CUHK initiative supporting responsible research data management.<br><br>
+<a href="https://libguides.lib.cuhk.edu.hk/rdm/home" target="_blank">RDM Resources</a> ·
+<a href="https://cuhkrdm.substack.com/" target="_blank">Data Matters @ CUHK</a>
+<div style="margin-top:15px; font-size:12px; line-height:1.4; border-top:1px dashed var(--line); padding-top:12px;">
+* Note: Suggestions are based on your survey answers compared with our current database. Because repository policies and storage limits change over time, please double-check their official rules before depositing your final datasets.
+</div>
+</footer>
+
+<script>
+const repositories = [
+ {id:"REP001", name:"CUHK Research Data Repository", short:"CUHK RDR", type:"Institutional / Generalist", subjects:["Other / General"], maxGB:999999, doi:true, embargo:true, private:true, code:false, cuhk:true, api:true, best:"CUHK researchers with general research datasets", limits:"File size 5 GB by default; adjustable upon request.", notes:"Strong first option for CUHK-affiliated researchers when no discipline-specific repository is required."},
+ {id:"REP002", name:"Figshare", short:"Figshare", type:"Generalist", subjects:["Other / General"], maxGB:20, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"General datasets needing DOI and sharing options", limits:"20 GB dataset limit.", notes:"Useful general-purpose alternative."},
+ {id:"REP003", name:"GitHub", short:"GitHub", type:"Code / Generalist", subjects:["Software / Code"], maxGB:5, doi:false, embargo:false, private:true, code:true, cuhk:false, api:true, best:"Software, code, collaboration, and version control", limits:"Recommended maximum dataset size 5 GB.", notes:"Best for code; pair with Zenodo if a DOI-archived software release is needed."},
+ {id:"REP004", name:"OSF", short:"OSF", type:"Generalist / Project", subjects:["Other / General"], maxGB:50, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Project-based research collaboration and general datasets", limits:"50 GB public / 5 GB private.", notes:"Good for project workflows and collaboration."},
+ {id:"REP005", name:"Zenodo", short:"Zenodo", type:"Generalist", subjects:["Other / General"], maxGB:50, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Multidisciplinary datasets needing DOI and embargo", limits:"50 GB dataset limit.", notes:"Popular general repository; useful alternative for general datasets."},
+ {id:"REP006", name:"Cambridge Crystallographic Data Centre", short:"CCDC", type:"Subject-specific", subjects:["Chemistry / Crystallography"], maxGB:.1, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Crystallographic structure data", limits:"Specific accepted formats only.", notes:"Recommended first for crystallography because it is discipline-recognised."},
+ {id:"REP007", name:"HEPData", short:"HEPData", type:"Subject-specific", subjects:["Particle Physics"], maxGB:.05, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Particle physics data", limits:"Specific formats; YAML file limit applies.", notes:"Recommended first for particle physics data."},
+ {id:"REP008", name:"National Genomics Data Center", short:"NGDC", type:"Subject-specific", subjects:["Genomics"], maxGB:9999, doi:false, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Biological genomics data", limits:"Size limit unknown in matrix.", notes:"Recommended first for genomics data where suitable."},
+ {id:"REP009", name:"RCSB PDB", short:"RCSB PDB", type:"Subject-specific", subjects:["Proteomics","Structural Biology / Protein Structures"], maxGB:999999, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Protein structure data", limits:"Standard structural format parameters.", notes:"Top priority specialized engine for macromolecular coordinates."},
+ {id:"REP010", name:"ProteomeCentral", short:"ProteomeCentral", type:"Subject-specific", subjects:["Proteomics"], maxGB:.015, doi:true, embargo:true, private:false, code:false, cuhk:false, api:true, best:"Proteomics data", limits:"15 MB for web interface upload only; DOI for complete submission.", notes:"Use for proteomics where it matches submission needs."},
+ {id:"REP011", name:"Mendeley Data", short:"Mendeley Data", type:"Generalist", subjects:["Other / General"], maxGB:100, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"General datasets up to 100 GB", limits:"100 GB dataset and file limit.", notes:"Good option when dataset size exceeds smaller generalist repositories."},
+ {id:"REP012", name:"ScienceDB", short:"ScienceDB", type:"Generalist", subjects:["Other / General"], maxGB:1000, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Very large general datasets", limits:"Up to 1 TB.", notes:"Strong option for very large interdisciplinary/general datasets."}
+];
+
+const questions = [
+ {id:"Q01", title:"Which subject best describes your research data?", type:"single", required:true, options:["Chemistry / Crystallography","Particle Physics","Genomics","Proteomics","Structural Biology / Protein Structures","Software / Code","Other / General"]},
+ {id:"Q02", title:"Approximately how large is your dataset?", type:"single", required:true, options:["<5 GB","5–20 GB","20–50 GB","50–100 GB","100–1000 GB",">1000 GB","I'm not sure"]},
+ {id:"Q03", title:"Approximately how large is your largest individual file?", type:"single", required:true, options:["<100 MB","100 MB–1 GB","1–5 GB","5–20 GB",">20 GB","I'm not sure"]},
+ {id:"Q04", title:"What features do you need from the repository?", subtitle:"Select all that apply.", type:"multi", required:true, options:["DOI","Embargo","Private sharing","Collaborator access","API access"]},
+ {id:"Q05", title:"Does your research data include software or code?", type:"single", required:true, options:["No","Yes, alongside other research data","Yes, software/code is my primary research output","I'm not sure"]},
+ {id:"Q06", title:"Do any of the following apply?", type:"multi", required:false, options:["My funder requires a specific repository.","My journal requires a specific repository.","My institution requires an institutional repository.","I don't have any specific requirements."]},
+ {id:"Q07", title:"Do you already have a preferred data licence for sharing your data?", type:"single", required:false, options:["CC0","CC BY","CC BY-NC","No preference","I'm not sure"]}
+];
+
+let step = -1;
+let answers = {};
+const main = document.getElementById("main");
+const side = document.getElementById("side");
+function renderSide(){
+  side.innerHTML = `
+    <h3>About Repository Selection</h3>
+    <p class="small">Choosing an appropriate repository helps improve the discoverability, accessibility, and long-term preservation of research data. It can also help satisfy funder, journal, and institutional requirements.</p>
+    <h3 style="margin-top:22px">Repository Overview</h3>
+    <p class="small">Recommendations may include institutional, generalist, and subject-specific repositories depending on your responses.</p>
+    ${repositories.slice(0,6).map(r=>`
+      <div class="repo-card">
+        <strong>${r.short}</strong>
+        <div class="small">${r.type}</div>
+        <span class="tag">${r.doi ? "DOI" : "No DOI"}</span>
+        <span class="tag">${r.embargo ? "Embargo" : "No embargo"}</span>
+        <span class="tag">${r.maxGB===999999 ? "Large/Unlimited" : r.maxGB===null ? "Size unknown" : r.maxGB+" GB"}</span>
+      </div>`).join("")}
+  `;
+}
+
+function welcome(){
+  step = -1;
+  answers = {};
+  main.innerHTML = `
+    <h1>Repository Advisor</h1>
+    <p><em>This tool helps researchers identify suitable repositories for sharing and preserving research data.</em></p>
+    <p>Complete a short consultation to receive repository recommendations tailored to your research discipline, data characteristics, repository requirements, and sharing preferences.</p>
+    <div class="kpis">
+      <div class="kpi">🧭 Guided consultation</div>
+      <div class="kpi">⏱ About 2 minutes</div>
+      <div class="kpi">📦 Multiple recommendations</div>
+    </div>
+    <div class="warning"><b>Important:</b> Repository recommendations are provided as decision support. Repository policies and requirements may change over time and should always be verified before depositing research data.</div>
+    <div class="actions"><button class="button" onclick="next()">Start Consultation</button></div>
+  `;
+  renderSide();
+}
+
+function next(){
+  if(step >= 0){
+    const q = questions[step];
+    if(q.required && (!answers[q.id] || answers[q.id].length === 0)){
+      alert("Please choose an answer first.");
+      return;
+    }
+  }
+  step++;
+  if(step >= questions.length){ results(); return; }
+  renderQuestion();
+}
+
+function back(){
+  if(step <= 0){ welcome(); return; }
+  step--;
+  renderQuestion();
+}
+
+function selectSingle(id, value){
+  answers[id] = [value];
+  renderQuestion();
+}
+
+function toggleMulti(id, value){
+  if(!answers[id]) answers[id] = [];
+  if(answers[id].includes(value)){
+    answers[id] = answers[id].filter(x=>x!==value);
+  } else {
+    answers[id].push(value);
+  }
+  renderQuestion();
+}
+
+// Uses double quotes for safety against strings with apostrophes
+function renderQuestion(){
+  const q = questions[step];
+  const pct = Math.round(((step+1)/questions.length)*100);
+  let opts = "";
+  if(q.type==="single"){
+    opts = q.options.map(o=>`
+      <button class="option ${(answers[q.id]||[]).includes(o)?'selected':''}" onclick="selectSingle('${q.id}', \`${o}\`)">${o}</button>
+    `).join("");
+  } else {
+    const selected = answers[q.id] || [];
+    opts = `<div class="checkbox-grid">` + q.options.map(o=>`
+      <button class="option ${selected.includes(o)?'selected':''}" onclick="toggleMulti('${q.id}', \`${o}\`)">${o}</button>
+    `).join("") + `</div>`;
+  }
+  main.innerHTML = `
+    <div class="progress-wrap"><div class="progress" style="width:${pct}%"></div></div>
+    <p class="small">Question ${step+1} of ${questions.length}</p>
+    <h2>${q.title}</h2>
+    ${q.subtitle ? `<p>${q.subtitle}</p>` : ""}
+    ${opts}
+    <div class="actions">
+      <button class="button secondary" onclick="back()">← Back</button>
+      <button class="button" onclick="next()">${step===questions.length-1 ? "See Recommendation" : "Next →"}</button>
+    </div>
+  `;
+  renderDynamicSide();
+}
+
+function renderDynamicSide(){
+  const top = calculateScores().slice(0,4);
+  side.innerHTML = `
+    <h3>Live Shortlist</h3>
+    <p class="small">Updates dynamically based on your active selections.</p>
+    ${top.map((r,i)=>`
+      <div class="rankrow">
+        <div><b>${i+1}. ${r.short}</b><br><span class="small">${r.best}</span></div>
+        <span class="pill">${r.calculatedScore}</span>
+      </div>
+    `).join("")}
+  `;
+}
+
+function calculateScores(){
+  return repositories.map(r => {
+    let score = 0;
+    let eligible = true;
+    let reasons = { discipline: "General/Other multidisciplinary coverage.", compatibility: "Supports your dataset size configuration.", features: [], requirements: "Compatible with default mandate selections.", licence: "Supports standard licensing frameworks." };
+    
+    const sub = answers.Q01 ? answers.Q01[0] : "";
+    const isGeneralist = r.subjects.includes("Other / General");
+
+if (!isGeneralist && !r.subjects.includes(sub)) {
+    eligible = false;
+}
+    if (sub && r.subjects.includes(sub)) { score += 35; reasons.discipline = "Subject-specific repository for your field."; }
+    else if (sub === "Software / Code" && r.code) { score += 35; reasons.discipline = "Optimized layout environment for version control."; }
+
+   const size = answers.Q02 ? answers.Q02[0] : "";
+
+const requiredSize = {
+    "<5 GB": 5,
+    "5–20 GB": 20,
+    "20–50 GB": 50,
+    "50–100 GB": 100,
+    "100–1000 GB": 1000,
+    ">1000 GB": 1000
+};
+
+if (requiredSize[size] !== undefined) {
+    if (r.maxGB >= requiredSize[size]) {
+        score += 20;
+        reasons.compatibility = "Supports your dataset size.";
+    } else {
+        eligible = false;
+        reasons.compatibility = "Repository capacity is below your dataset size requirement.";
+    }
+}
+
+    const feats = answers.Q04 || [];
+    feats.forEach(f => {
+      if (f === "DOI" && r.doi) { score += 15; reasons.features.push("DOI"); }
+      if (f === "Embargo" && r.embargo) { score += 15; reasons.features.push("Embargo"); }
+      if (f === "API access" && r.api) { score += 15; reasons.features.push("API"); }
+    });
+    
+    if (reasons.features.length === 0) { reasons.features = ["Standard features"]; }
+
+    return {
+    ...r,
+    eligible,
+    calculatedScore: score,
+    mappedReasons: reasons
+};
+  })
+.filter(r => r.eligible)
+.sort((a,b) => b.calculatedScore - a.calculatedScore);
+}
+
+function results(){
+  const ranked = calculateScores();
+  const top = ranked[0];
+  const alts = ranked.slice(1,4);
+
+  main.innerHTML = `
+    <p class="small">Consultation complete!</p>
+    <div class="rec-card">
+        <div class="rec-header">
+            <h2>Recommended Repository</h2>
+            <div class="repo-title">${top.name}</div>
+        </div>
+        <div class="rec-body">
+            <div class="rec-section-title">Why this repository?</div>
+            <div class="reason-grid">
+                <div class="reason-item">
+                    <div class="reason-label">Research discipline</div>
+                    <div class="reason-value">${top.mappedReasons.discipline}</div>
+                </div>
+                <div class="reason-item">
+                    <div class="reason-label">Dataset compatibility</div>
+                    <div class="reason-value">${top.mappedReasons.compatibility}</div>
+                </div>
+                <div class="reason-item">
+                    <div class="reason-label">Repository features</div>
+                    <div class="reason-value">
+                        <div class="feature-tags">
+                            ${top.mappedReasons.features.map(f => `<span class="tag">${f}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+                <div class="reason-item">
+                    <div class="reason-label">Repository requirements</div>
+                    <div class="reason-value">Compatible with your selected institutional requirements.</div>
+                </div>
+                <div class="reason-item">
+                    <div class="reason-label">Licence</div>
+                    <div class="reason-value">Supports your preferred licence terms.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="warning"><b>Check before depositing:</b> Repository requirements and policies can change over time. This prototype gives a recommendation based on the current matrix, not final official advice.</div>
+    
+    <h3>Alternative repositories to consider</h3>
+    ${alts.map(a=>`
+      <div class="rankrow">
+        <div><b>${a.short}</b><br><span class="small">${a.best}</span></div>
+        <span class="pill">Alternative</span>
+      </div>`).join("")}
+      
+    <div class="actions">
+      <button class="button secondary" onclick="welcome()">Start Over</button>
+      <button class="button" onclick="copySummary()">Copy Summary</button>
+    </div>
+  `;
+
+  side.innerHTML = `
+    <h3>Consultation Summary</h3>
+    <div class="repo-card">
+      <strong>Your parameters</strong>
+      <p class="small">
+      Discipline: ${answers.Q01 ? answers.Q01[0] : "—"}<br>
+      Capacity: ${answers.Q02 ? answers.Q02[0] : "—"}<br>
+      Features: ${(answers.Q04||[]).join(", ") || "—"}
+      </p>
+    </div>
+    <h3>Repository details</h3>
+    <div class="repo-card">
+      <strong>${top.short}</strong>
+      <p class="small">${top.notes}</p>
+      <span class="tag">${top.type}</span>
+    </div>
+  `;
+}
+
+function copySummary(){
+  const ranked = calculateScores();
+  const top = ranked[0];
+  const text = `Repository Adviser Prototype Summary\nRecommended: ${top.name}\nDiscipline: ${answers.Q01 ? answers.Q01[0] : "—"}\nCapacity: ${answers.Q02 ? answers.Q02[0] : "—"}`;
+  navigator.clipboard.writeText(text).then(()=>alert("Summary copied to clipboard!"));
+}
+
+welcome();
+</script>
+</body>
+</html>
