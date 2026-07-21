@@ -1,322 +1,400 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="A playful Research Data Management style quiz by Data Matters @ CUHK.">
-<title>RDM Style Evaluator | Data Matters @ CUHK</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Research Data Repository Adviser Prototype</title>
 <style>
-/* ========== Variables ========== */
-:root{--ink:#10264d;--purple:#741277;--teal:#168f93;--gold:#e5a900;--muted:#647189;--line:#dfe7ef;--paper:#fff;--cream:#fffaf2;--shadow:0 24px 70px rgba(16,38,77,.14);--radius:28px}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 8% 8%,rgba(22,164,167,.12),transparent 25rem),radial-gradient(circle at 92% 12%,rgba(116,18,119,.10),transparent 27rem),linear-gradient(180deg,#fffdf8,#f4fbfc);overflow-x:hidden}button,a{font:inherit}button{cursor:pointer}a{color:inherit}
-/* ========== Navigation ========== */
-.site-header{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(16,38,77,.1)}.nav-wrap{width:min(1180px,100%);margin:auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:13px;text-decoration:none;font-weight:900;min-width:0}.brand img{width:58px;height:58px;object-fit:contain}.brand span{font-size:1.18rem;white-space:nowrap}.desktop-nav{display:flex;align-items:center;gap:25px}.desktop-nav>a,.drop-trigger{border:0;background:none;text-decoration:none;color:#34435e;font-weight:760;padding:10px 0}.desktop-nav>a:hover,.drop-trigger:hover{color:var(--purple)}.dropdown{position:relative}.drop-menu{position:absolute;right:0;top:calc(100% + 8px);width:230px;padding:8px;background:white;border:1px solid var(--line);border-radius:15px;box-shadow:0 16px 35px rgba(16,38,77,.14);opacity:0;visibility:hidden;transform:translateY(-5px);transition:.18s}.dropdown:hover .drop-menu,.dropdown:focus-within .drop-menu{opacity:1;visibility:visible;transform:none}.drop-menu a{display:block;padding:11px 12px;border-radius:10px;text-decoration:none;font-weight:700}.drop-menu a:hover{background:#f4f8fb;color:var(--purple)}.hamburger{display:none;width:46px;height:46px;border:1px solid var(--line);border-radius:13px;background:#fff;align-items:center;justify-content:center;flex-direction:column;gap:5px}.hamburger span{width:22px;height:2px;background:var(--ink);transition:.22s}.hamburger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}.hamburger[aria-expanded="true"] span:nth-child(2){opacity:0}.hamburger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}.mobile-menu{display:none;padding:0 18px 18px;border-top:1px solid var(--line)}.mobile-menu.open{display:grid}.mobile-menu a{padding:13px 5px;text-decoration:none;font-weight:750;border-bottom:1px solid #edf1f5}.mobile-label{padding:17px 5px 5px;color:var(--muted);font-size:.78rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em}
-/* ========== Landing ========== */
-.app{width:min(1180px,100%);margin:auto;padding:28px 22px 38px}.shell{overflow:hidden;background:rgba(255,255,255,.96);border:1px solid rgba(16,38,77,.08);border-radius:34px;box-shadow:var(--shadow)}.main{padding:clamp(28px,5vw,62px)}.screen{display:none;animation:enter .28s ease}.screen.active{display:block}@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.hero{display:grid;grid-template-columns:1.04fr .96fr;gap:44px;align-items:center}.eyebrow{display:inline-flex;padding:8px 12px;border-radius:999px;background:#edf9f7;color:#087b78;font-size:.82rem;font-weight:850}.hero h1{margin:18px 0 10px;font-size:clamp(2.55rem,5.5vw,4.8rem);line-height:.98;letter-spacing:-.055em}.subtitle{margin:0;color:var(--teal);font-size:clamp(1.18rem,2vw,1.55rem);font-weight:900}.chips{display:flex;flex-wrap:wrap;gap:10px;margin:25px 0}.chip{padding:10px 13px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:.88rem;font-weight:780}.primary,.next,.share-main,.restart{border:0;border-radius:16px;padding:15px 23px;font-weight:900;transition:.18s}.primary,.next{color:white;background:linear-gradient(135deg,var(--purple),#9b2b9e);box-shadow:0 10px 25px rgba(116,18,119,.18)}.primary:hover,.next:hover:not(:disabled){transform:translateY(-2px)}.note{display:block;margin-top:14px;color:var(--teal);font-size:.98rem;font-weight:780}.mascot-stage{position:relative;width:min(100%,500px);aspect-ratio:1;margin:auto;border-radius:50%;background:radial-gradient(circle,#fff 0 34%,rgba(22,164,167,.08) 35% 58%,transparent 59%);}.mascot-stage:before{content:"";position:absolute;inset:16%;border:2px dashed rgba(116,18,119,.19);border-radius:50%}.hero-mascot{position:absolute;width:31%;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 12px 16px rgba(16,38,77,.13));transition:transform .22s ease}.hero-mascot:hover{transform:translateY(-7px) scale(1.06);z-index:3}.m1{top:0;left:34.5%}.m2{top:19%;right:1%}.m3{bottom:10%;right:6%}.m4{bottom:0;left:34.5%}.m5{bottom:10%;left:6%}.m6{top:19%;left:1%}
-/* ========== Quiz ========== */
-.quiz-top{max-width:850px;margin:0 auto 24px}.progress-label{font-weight:900;color:var(--teal);margin-bottom:9px}.progress-track{height:9px;border-radius:999px;background:#eaf0f4;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--purple));transition:.3s}.question-card{max-width:850px;margin:auto}.question-title{margin:0 0 25px;font-size:clamp(1.75rem,4vw,2.75rem);line-height:1.14;letter-spacing:-.035em}.answers{display:grid;gap:11px}.answer{display:flex;gap:14px;align-items:flex-start;width:100%;padding:16px 17px;border:2px solid #e4eaf1;border-radius:18px;color:var(--ink);background:#fff;text-align:left;box-shadow:0 7px 18px rgba(16,38,77,.04);transition:.17s}.answer:hover{border-color:#9bd8d4;transform:translateY(-2px)}.answer.selected{border-color:var(--purple);background:#fbf3fc;box-shadow:0 0 0 4px rgba(116,18,119,.08)}.answer-letter{flex:0 0 34px;display:grid;place-items:center;height:34px;border-radius:50%;color:#087b78;background:#edf8f7;font-weight:900}.answer.selected .answer-letter{color:#fff;background:var(--purple)}.controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px}.back{border:0;padding:10px;color:var(--muted);background:transparent;font-weight:850}.next:disabled{opacity:.38;cursor:not-allowed}
-/* ========== Results ========== */
-.result-wrap{text-align:center}.result-kicker{color:var(--teal);font-size:.8rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}.result-title{margin:10px 0 4px;font-size:clamp(2.45rem,6vw,4.8rem);line-height:1;letter-spacing:-.05em}.result-animal{color:var(--muted);font-weight:850}.result-mascot{width:min(310px,75vw);margin:12px auto 20px;filter:drop-shadow(0 18px 25px rgba(16,38,77,.14))}.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0;text-align:left}.result-box{padding:19px;border:1px solid rgba(16,38,77,.08);border-radius:20px;background:#fff;box-shadow:0 10px 24px rgba(16,38,77,.06)}.result-box h3{margin:0 0 8px;font-size:.79rem;letter-spacing:.09em;text-transform:uppercase}.result-box p{margin:0;color:#3e4d68;line-height:1.58}.comparison{margin:24px auto 0;padding:21px;max-width:790px;border:1px solid var(--line);border-radius:22px;background:#fbfdff;text-align:left}.comparison h3{margin:0 0 5px}.comparison p{margin:0 0 16px;color:var(--muted)}.score-bars{display:grid;gap:10px}.score-row{display:grid;grid-template-columns:200px 1fr 28px;gap:10px;align-items:center;font-size:.84rem}.bar{height:11px;overflow:hidden;border-radius:999px;background:#eaf0f4}.bar div{height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--teal),var(--purple))}.disclaimer{max-width:790px;margin:19px auto 0;padding:17px 19px;border-radius:16px;background:#f4f7fa;color:var(--muted);font-size:.88rem;line-height:1.58;text-align:left}.disclaimer a{color:var(--purple);font-weight:800}.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:21px}.share-main{color:#fff;background:var(--teal)}.restart{color:var(--purple);background:#fff;border:2px solid #ead8ec}
-/* ========== Share Modal ========== */
-.modal{position:fixed;inset:0;z-index:2000;display:none;place-items:center;padding:20px;background:rgba(8,18,38,.56)}.modal.open{display:grid}.modal-card{width:min(570px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:24px;padding:25px;box-shadow:0 25px 80px rgba(0,0,0,.25)}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:20px}.modal-head h2{margin:0}.close{width:40px;height:40px;border:0;border-radius:50%;background:#f0f3f6;font-size:1.5rem}.share-preview{margin:20px 0;padding:20px;border-radius:22px;background:linear-gradient(145deg,#f5f0e9,#fcfaf4 45%,#eaf7f5);border:1px solid #e6dfd5;position:relative;overflow:hidden}.share-preview:after{content:"";position:absolute;inset:0;opacity:.28;pointer-events:none;background-image:repeating-linear-gradient(0deg,rgba(16,38,77,.05) 0 1px,transparent 1px 4px)}.preview-inner{position:relative;z-index:1;display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center}.preview-inner img{width:110px}.preview-copy small{font-weight:900;color:var(--teal)}.preview-copy h3{margin:5px 0;font-size:1.45rem}.preview-copy p{margin:0;color:#4d5b70;font-size:.9rem}.share-options{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.share-option{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fff;text-align:left;font-weight:800}.share-option:hover{border-color:var(--teal);background:#f3fbfa}.toast{position:fixed;left:50%;bottom:24px;z-index:3000;padding:11px 16px;border-radius:999px;color:#fff;background:var(--ink);opacity:0;transform:translateX(-50%) translateY(18px);transition:.22s}.toast.show{opacity:1;transform:translateX(-50%)}.footer{padding:17px 22px 22px;text-align:center;color:#718097;font-size:.79rem}.footer a{font-weight:800;text-decoration:none;color:var(--purple)}
-/* ========== Responsive ========== */
-@media(max-width:900px){.desktop-nav{display:none}.hamburger{display:flex}.hero{grid-template-columns:1fr}.mascot-stage{order:-1;width:min(480px,100%)}.result-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.nav-wrap{padding:10px 14px}.brand img{width:47px;height:47px}.brand span{font-size:1rem}.app{padding:0}.shell{border-radius:0;border-left:0;border-right:0;min-height:calc(100vh - 68px)}.main{padding:25px 15px 34px}.hero h1{font-size:clamp(2.35rem,14vw,3.5rem)}.chips{display:grid}.chip{text-align:center}.mascot-stage{width:100%;max-width:390px}.hero-mascot{width:33%}.score-row{grid-template-columns:125px 1fr 25px}.controls{align-items:stretch}.next{flex:1}.share-options{grid-template-columns:1fr}.preview-inner{grid-template-columns:85px 1fr}.preview-inner img{width:85px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
-
-#confettiCanvas{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-  z-index:1200;
+:root {
+  --navy:#17324d; --teal:#00a6a6; --light:#f5fbfb; --cream:#fffdf7;
+  --purple:#7a1b7e; --line:#d9e5ea; --soft:#eef8f8; --gold:#f1b900;
 }
-@media (prefers-reduced-motion: reduce){
-  #confettiCanvas{display:none}
+* { box-sizing:border-box; }
+body {
+  margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--navy); background:linear-gradient(135deg,#fffdf7 0%,#f1fbfb 80%);
+}
+.app { max-width:1180px; margin:0 auto; padding:36px 24px 48px; }
+.topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.navbar { display:flex; justify-content:space-between; align-items:center; background:white; border:1px solid var(--line); border-radius:18px; padding:14px 22px; margin-bottom:24px; box-shadow:0 8px 20px rgba(21,56,79,.05); position: relative; }
+.logo { font-weight:800; font-size:20px; }
+.navlinks { display:flex; gap:24px; flex-wrap:wrap; }
+.navlinks a { text-decoration:none; color:var(--navy); font-weight:600; }
+.navlinks a.active { color:var(--purple); border-bottom:3px solid var(--purple); padding-bottom:4px; }
+.brand { font-weight:800; font-size:20px; letter-spacing:.2px; }
+.badge { border:1px solid var(--line); border-radius:999px; padding:8px 14px; background:white; color:#5a6b7e; font-size:14px; }
+.grid { display:grid; grid-template-columns:minmax(0,2fr) minmax(280px,1fr); gap:24px; align-items:start; }
+.card { background:white; border:1px solid var(--line); border-radius:28px; padding:34px; box-shadow:0 18px 45px rgba(21,56,79,.08); }
+.side { position:sticky; top:20px; }
+h1 { font-size:48px; line-height:1.06; margin:0 0 18px; }
+h2 { font-size:30px; margin:0 0 16px; }
+h3 { font-size:20px; margin:0 0 10px; }
+p { font-size:17px; line-height:1.55; color:#33485f; }
+.small { font-size:14px; color:#64748b; }
+.button { border:0; background:linear-gradient(135deg,var(--purple),#4b1160); color:white; padding:15px 24px; border-radius:16px; font-weight:800; font-size:16px; cursor:pointer; box-shadow:0 10px 22px rgba(122,27,126,.22); }
+.button.secondary { background:white; color:var(--navy); border:1px solid var(--line); box-shadow:none; }
+.actions { display:flex; gap:12px; margin-top:26px; flex-wrap:wrap; }
+.option { display:block; width:100%; border:1.5px solid var(--line); background:#fff; border-radius:18px; padding:16px 18px; margin:12px 0; cursor:pointer; text-align:left; color:var(--navy); font-size:16px; transition:.15s; }
+.option:hover { border-color:var(--teal); background:#f5ffff; }
+.option.selected { border-color:var(--teal); background:#e9fbfb; box-shadow:inset 0 0 0 1px var(--teal); }
+.progress-wrap { height:10px; background:#edf2f7; border-radius:99px; margin:0 0 28px; overflow:hidden; }
+.progress { height:100%; background:linear-gradient(90deg,var(--teal),var(--purple)); width:0%; }
+.kpis { display:flex; gap:12px; flex-wrap:wrap; margin-top:22px; }
+.kpi { background:var(--soft); border-radius:16px; padding:12px 14px; font-weight:700; font-size:14px; }
+.repo-card { border:1px solid var(--line); border-radius:18px; padding:16px; margin:12px 0; background:#fff; }
+.repo-card strong { display:block; font-size:18px; margin-bottom:4px; }
+.tag { display:inline-block; background:#eef2ff; color:#394984; border-radius:999px; padding:4px 9px; font-size:12px; margin:4px 4px 0 0; }
+.match { font-size:42px; font-weight:900; color:var(--purple); margin:8px 0; }
+.warning { background:#fff7ed; border-left:5px solid #f59e0b; padding:12px 14px; border-radius:12px; margin:14px 0; color:#7c3f00; }
+.rankrow { display:flex; justify-content:space-between; gap:18px; align-items:center; border-bottom:1px solid var(--line); padding:12px 0; }
+.rankrow:last-child { border-bottom:0; }
+.pill { border-radius:999px; background:#eef8f8; padding:6px 10px; font-size:13px; font-weight:800; color:#087a7a; }
+.checkbox-grid { display:grid; grid-template-columns:1fr; gap:10px; width:100%; }
+
+.rec-card { border: 1px solid var(--line); border-radius: 20px; overflow: hidden; margin-bottom: 30px; background: #ffffff; box-shadow: 0 10px 30px rgba(21,56,79,.04); }
+.rec-header { background: linear-gradient(135deg, var(--navy), #0b1a29); color: #ffffff; padding: 22px 28px; }
+.rec-header h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); margin: 0 0 4px; font-weight: 800; }
+.repo-title { font-size: 24px; font-weight: 800; }
+.rec-body { padding: 30px; color: var(--navy); }
+.rec-section-title { font-size: 16px; font-weight: 800; margin-bottom: 20px; color: var(--purple); border-bottom: 2px solid var(--soft); padding-bottom: 6px; }
+.reason-grid { display: flex; flex-direction: column; gap: 16px; }
+.reason-item { display: grid; grid-template-columns: 210px 1fr; padding-bottom: 14px; border-bottom: 1px dashed var(--line); align-items: start; }
+.reason-item:last-child { border-bottom: none; padding-bottom: 0; }
+.reason-label { font-weight: 700; font-size: 14px; color: #5a6b7e; text-transform: uppercase; letter-spacing: 0.3px; }
+.reason-value { font-size: 15px; color: #223345; line-height: 1.45; }
+.feature-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.feature-tags .tag { background: var(--soft); color: var(--teal); border: 1px solid #cbeeed; font-weight: 700; padding: 4px 12px; }
+
+/* Custom Burger Menu Toggle Icon */
+.burger-menu { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--navy); }
+
+@media(max-width:850px){
+  .grid{grid-template-columns:1fr}
+  h1{font-size:36px}
+  .side{position:static}
+  .reason-item { grid-template-columns: 1fr; gap: 4px; }
+  /* Align Burger Menu on the absolute right side */
+  .burger-menu { display: block; order: 2; margin-left: auto; }
+  .logo { order: 1; }
+  .navlinks { display: none; width: 100%; flex-direction: column; gap: 12px; margin-top: 15px; order: 3; }
+  .navlinks.open { display: flex; }
 }
 </style>
 </head>
 <body>
-<header class="site-header"><div class="nav-wrap">
-<a class="brand" href="#" id="brandHome"><img src="assets/data-matters-logo.png" alt="Data Matters at CUHK logo"><span>RDM Style Evaluator</span></a>
-<nav class="desktop-nav" aria-label="Primary navigation"><a target="_blank" rel="noopener" href="https://libguides.lib.cuhk.edu.hk/rdm/home">RDM Resources</a><a target="_blank" rel="noopener" href="https://marticao.github.io/repository-advisor/">RDM Tools</a><div class="dropdown"><button class="drop-trigger" aria-haspopup="true">Data Champions @ CUHK ▾</button><div class="drop-menu"><a target="_blank" rel="noopener" href="https://libguides.lib.cuhk.edu.hk/datachampions/2026">DC 2026/27</a><a target="_blank" rel="noopener" href="https://cuhkrdm.substack.com/">Data Matters @ CUHK</a></div></div></nav>
-<button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-</div><nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation"><a target="_blank" rel="noopener" href="https://libguides.lib.cuhk.edu.hk/rdm/home">RDM Resources</a><a target="_blank" rel="noopener" href="https://marticao.github.io/repository-advisor/">RDM Tools</a><div class="mobile-label">Data Champions @ CUHK</div><a target="_blank" rel="noopener" href="https://libguides.lib.cuhk.edu.hk/datachampions/2026">DC 2026/27</a><a target="_blank" rel="noopener" href="https://cuhkrdm.substack.com/">Data Matters @ CUHK</a></nav></header>
-<main class="app"><section class="shell"><div class="main">
-<section class="screen active" id="introScreen"><div class="hero"><div><span class="eyebrow">A two-minute research personality quiz</span><h1>What’s Your Research Data Management Style?</h1><p class="subtitle">How does your research mind manage information?</p><div class="chips"><div class="chip">8 behaviour-based questions</div><div class="chip">Compare all six styles</div><div class="chip">Practical RDM tips</div></div><button class="primary" id="startBtn">Let’s find out →</button><span class="note">Answer as your real research self—not your ideal one.</span></div><div class="mascot-stage" aria-label="Six RDM style mascots"><img class="hero-mascot m1" src="assets/planner-owl.png" alt="Planner owl"><img class="hero-mascot m2" src="assets/resourceful-racoon.png" alt="Resourceful raccoon"><img class="hero-mascot m3" src="assets/thinker-elephant.png" alt="Strategic thinker elephant"><img class="hero-mascot m4" src="assets/detail-meerkat.png" alt="Detail detective meerkat"><img class="hero-mascot m5" src="assets/keeper-otter.png" alt="Knowledge keeper otter"><img class="hero-mascot m6" src="assets/creative-fox.png" alt="Creative fox"></div></div></section>
-<section class="screen" id="quizScreen"><div class="quiz-top"><div class="progress-label" id="progressLabel">Question 1 of 8</div><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div></div><div class="question-card"><h2 class="question-title" id="questionText"></h2><div class="answers" id="answers"></div><div class="controls"><button class="back" id="backBtn">← Back</button><button class="next" id="nextBtn" disabled>Next question →</button></div></div></section>
-<section class="screen" id="resultScreen"><div class="result-wrap"><div class="result-kicker">Your strongest RDM style</div><h2 class="result-title" id="resultTitle"></h2><div class="result-animal" id="resultAnimal"></div><img class="result-mascot" id="resultMascot" alt=""><div class="result-grid"><div class="result-box" id="styleBox"><h3>Your style</h3><p id="resultDescription"></p></div><div class="result-box"><h3>Your RDM superpower</h3><p id="resultSuperpower"></p></div><div class="result-box"><h3>A practical next step</h3><p id="resultTip"></p></div></div><div class="comparison"><h3>Your full style mix</h3><p>Most researchers combine several habits. Here is how your answers were distributed.</p><div class="score-bars" id="scoreBars"></div></div><div class="disclaimer">This is a playful reflection on your current research habits rather than a fixed label or formal assessment. Most researchers draw on several styles, and your approach may change across projects, collaborators, and stages of the research process. If you’re deciding where to store or share your research outputs, explore the <a target="_blank" rel="noopener" href="https://marticao.github.io/repository-advisor/">Repository Advisor</a> for practical recommendations.</div><div class="actions"><button class="share-main" id="shareBtn">Share result</button><button class="restart" id="restartBtn">Retake quiz</button></div></div></section>
-</div><footer class="footer"><a target="_blank" rel="noopener" href="https://cuhkrdm.substack.com/">Data Matters @ CUHK</a> · A playful introduction to Research Data Management</footer></section></main>
-<div class="modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareTitle"><div class="modal-card"><div class="modal-head"><h2 id="shareTitle">Share your result</h2><button class="close" id="closeModal" aria-label="Close">×</button></div><div class="share-preview"><div class="preview-inner"><img id="previewMascot" alt=""><div class="preview-copy"><small>DATA MATTERS @ CUHK</small><h3 id="previewTitle"></h3><p id="previewDescription"></p></div></div></div><div class="share-options"><button class="share-option" id="downloadCardBtn" data-action="download">↓ Download Result Card</button><button class="share-option" data-action="copy">🔗 Copy Link</button><button class="share-option" data-network="linkedin">LinkedIn</button><button class="share-option" data-network="facebook">Facebook</button><button class="share-option" data-network="threads">Threads</button><button class="share-option" data-network="x">X</button><button class="share-option" data-network="substack">Substack</button></div></div></div><div class="toast" id="toast"></div>
+<div class="app">
+  <div class="navbar">
+    <div class="logo"><a href="#" style="text-decoration:none;color:inherit;">Data Champions @ CUHK</a></div>
+    <!-- Burger menu link triggers onmobile -->
+    <button class="burger-menu" onclick="document.querySelector('.navlinks').classList.toggle('open')">☰</button>
+    <div class="navlinks">
+      <a href="#" class="active">Repository Advisor</a>
+      <a href="https://libguides.lib.cuhk.edu.hk/rdm/home" target="_blank">RDM Resources</a>
+      <a href="#" target="_blank">RDM Tools</a>
+      <a href="https://cuhkrdm.substack.com/" target="_blank">Data Matters @ CUHK</a>
+    </div>
+  </div>
+
+  <div class="grid">
+    <main class="card" id="main"></main>
+    <aside class="card side" id="side"></aside>
+  </div>
+</div>
+
+<!-- Added clear left padding to match grid alignment borders -->
+<footer style="margin-top:36px; padding:24px; border-top:1px solid #d9e5ea; font-size:14px; color:#64748b; max-width:1180px; margin-left:auto; margin-right:auto;">
+<strong>Data Champions @ CUHK</strong><br>
+Repository Advisor is a Data Champions @ CUHK initiative supporting responsible research data management.<br><br>
+<a href="https://libguides.lib.cuhk.edu.hk/rdm/home" target="_blank">RDM Resources</a> ·
+<a href="https://cuhkrdm.substack.com/" target="_blank">Data Matters @ CUHK</a>
+<div style="margin-top:15px; font-size:12px; line-height:1.4; border-top:1px dashed var(--line); padding-top:12px;">
+* Note: Suggestions are based on your survey answers compared with our current database. Because repository policies and storage limits change over time, please double-check their official rules before depositing your final datasets.
+</div>
+</footer>
+
 <script>
-const QUIZ={"version": "2.0", "title": "What’s Your Research Data Management Style?", "premise": "How does your research mind manage information?", "intro": "Research does not always happen in neat folders or perfect workflows. Answer eight quick questions about what you actually do—not what the ideal version of you would do. At the end, you’ll see the style that most closely matched your answers, practical RDM tips, and how your habits compare across all six styles.", "result_note": "This is a playful reflection on your current research habits, not a fixed label or formal assessment. Most researchers draw on several styles depending on the project and the pressure they are under.", "types": {"planner": {"name": "The Careful Planner", "animal": "The Organised Owl", "emoji": "🦉", "description": "You feel more confident when the structure exists before the work becomes complicated. You tend to create order early, anticipate what you may need later, and reduce avoidable confusion.", "superpower": "You give research a dependable backbone. Your systems make files easier to locate, protect, explain, and carry through the life of a project.", "tip": "Keep the system light enough to maintain. A clear folder structure, a short README, and automatic backups are usually more useful than an elaborate plan that becomes another task.", "accent": "#0f8f8a", "soft": "#e4f7f4"}, "responder": {"name": "The Resourceful Responder", "animal": "The Adaptable Raccoon", "emoji": "🦝", "description": "You rely on flexibility, memory, and strong retrieval instincts. Your workspace may not always look tidy, but you are often surprisingly good at finding what you need and recovering when plans change.", "superpower": "You keep moving when conditions are imperfect. You improvise, search, reconstruct, and find workable solutions without becoming paralysed by the absence of a perfect system.", "tip": "Build two small safety nets around your adaptability: automatic cloud backup and a ten-minute weekly reset for Downloads, Desktop, and recent files. You do not need to become a different person—just make recovery easier.", "accent": "#c57a00", "soft": "#fff2d5"}, "strategist": {"name": "The Strategic Thinker", "animal": "The Visionary Elephant", "emoji": "🐘", "description": "You naturally think beyond individual files. You are interested in how information, tools, decisions, and outputs connect across the whole research process.", "superpower": "You see systems and long-term consequences. You can align everyday data work with the research question, future publications, preservation, reuse, and wider impact.", "tip": "Give the big picture a few practical anchors. Decide where active files live, how versions are named, and what must be documented after each major research stage.", "accent": "#3857a5", "soft": "#e9edfb"}, "detective": {"name": "The Detail Detective", "animal": "The Thorough Meerkat", "emoji": "🔎", "description": "You notice inconsistencies, ambiguous labels, missing context, and small differences between versions. You are inclined to verify before you trust.", "superpower": "You protect research quality. Your attention to evidence, provenance, naming, and accuracy makes the work more trustworthy and easier to defend.", "tip": "Define what needs close checking and what only needs to be usable. Checklists, validation rules, and version notes can preserve your standards without turning every task into an investigation.", "accent": "#b54a25", "soft": "#fde9df"}, "keeper": {"name": "The Knowledge Keeper", "animal": "The Thoughtful Otter", "emoji": "🦦", "description": "You create an external memory through notes, logs, annotations, bookmarks, and documents that help you return to ideas after time has passed. You know that context disappears faster than expected.", "superpower": "You preserve the reasoning around the research, not only the files. Your records help future-you—and, when relevant, other people—understand what happened, why it happened, and what to do next.", "tip": "Give your notes one dependable home and add dates or links to the files they describe. A searchable research log is more valuable than many disconnected notes you cannot relocate.", "accent": "#7650a8", "soft": "#f0e9f8"}, "creative": {"name": "The Creative Problem Solver", "animal": "The Inventive Fox", "emoji": "🦊", "description": "You learn by trying. You enjoy testing tools, changing approaches, and finding unconventional routes through research and information problems.", "superpower": "You turn friction into possibility. Your experimentation can reveal faster workflows, richer interpretations, and new ways to collect, analyse, or present research material.", "tip": "Leave a reproducible trail while you experiment. Record the tool, version, settings, prompts, and key steps whenever an approach produces something worth keeping.", "accent": "#5c8f21", "soft": "#edf6df"}}, "questions": [{"id": 1, "text": "You’re getting ready to work on a new research topic. What’s the first thing you’re most likely to do?", "answers": [{"text": "Create a main folder and a basic structure before too many files appear.", "scores": {"planner": 2, "detective": 1}}, {"text": "Start reading, collecting, photographing, downloading, or experimenting while the idea is fresh.", "scores": {"creative": 2, "responder": 1}}, {"text": "Sketch how the research question, sources, analysis, and eventual outputs might connect.", "scores": {"strategist": 2, "planner": 1}}, {"text": "Look closely at a previous project or example to see how the material was handled.", "scores": {"detective": 2, "planner": 1}}, {"text": "Open a notebook or working document where I can record ideas and decisions as they emerge.", "scores": {"keeper": 2, "strategist": 1}}, {"text": "Begin wherever the immediate task takes me and work out the organisation once I know what I have.", "scores": {"responder": 2, "creative": 1}}]}, {"id": 2, "text": "After finishing a productive research session, what usually happens to the files, notes, or materials you’ve created?", "answers": [{"text": "In their proper project folders, or at least in an organised inbox folder.", "scores": {"planner": 2, "detective": 1}}, {"text": "Mostly in Downloads or on the Desktop. Search will rescue me later.", "scores": {"responder": 2, "creative": 1}}, {"text": "Grouped according to the research stage or purpose they belong to.", "scores": {"strategist": 2, "planner": 1}}, {"text": "Renamed carefully so I can distinguish dates, sources, or versions.", "scores": {"detective": 2, "planner": 1}}, {"text": "Alongside notes explaining why I saved them or what I noticed.", "scores": {"keeper": 2, "strategist": 1}}, {"text": "In whichever app or location was most useful while I was working.", "scores": {"creative": 2, "responder": 1}}]}, {"id": 3, "text": "You need a source, image, note, or dataset you last used six months ago. What happens next?", "answers": [{"text": "I navigate to the place where it should be and usually find it quickly.", "scores": {"planner": 2, "detective": 1}}, {"text": "I use search, keywords, dates, browser history, or whatever clue I remember.", "scores": {"responder": 2, "creative": 1}}, {"text": "I remember which part of the project it belonged to, then work backwards from there.", "scores": {"strategist": 2, "planner": 1}}, {"text": "I identify the exact version or source details before using it again.", "scores": {"detective": 2, "keeper": 1}}, {"text": "I check my research log, notes, annotations, or bookmarks for the trail I left.", "scores": {"keeper": 2, "detective": 1}}, {"text": "I may recreate, re-download, or find an alternative faster than locating the original.", "scores": {"creative": 2, "responder": 1}}]}, {"id": 4, "text": "Which sentence sounds most like something you have actually said recently?", "answers": [{"text": "“Let me put this in the right folder now before I forget.”", "scores": {"planner": 2, "keeper": 1}}, {"text": "“I know it is somewhere in Downloads.”", "scores": {"responder": 2, "creative": 1}}, {"text": "“Before I decide, I need to see how this affects the whole project.”", "scores": {"strategist": 2, "planner": 1}}, {"text": "“Wait—are these really the same version?”", "scores": {"detective": 2, "planner": 1}}, {"text": "“I should write down why I made this decision.”", "scores": {"keeper": 2, "strategist": 1}}, {"text": "“There must be a tool or workaround for this.”", "scores": {"creative": 2, "responder": 1}}]}, {"id": 5, "text": "You hear about a new research, AI, or data-management tool. What do you genuinely do?", "answers": [{"text": "Check whether it fits my existing workflow before adding another tool.", "scores": {"planner": 2, "strategist": 1}}, {"text": "Bookmark it and return only when a real need or deadline appears.", "scores": {"responder": 2, "creative": 1}}, {"text": "Think about whether it could improve the research process over the long term.", "scores": {"strategist": 2, "planner": 1}}, {"text": "Check reliability, privacy, limitations, and whether its output can be verified.", "scores": {"detective": 2, "strategist": 1}}, {"text": "Save notes about what it does and where it might be useful later.", "scores": {"keeper": 2, "planner": 1}}, {"text": "Try it on a small task as soon as possible.", "scores": {"creative": 2, "detective": 1}}]}, {"id": 6, "text": "Which description best matches the way you name files in real life?", "answers": [{"text": "I use a recognisable pattern with dates, topics, or version numbers.", "scores": {"planner": 2, "detective": 1}}, {"text": "The names make sense when I save them; later I rely heavily on search.", "scores": {"responder": 2, "creative": 1}}, {"text": "The name usually reflects where the file sits in the larger project.", "scores": {"strategist": 2, "planner": 1}}, {"text": "I am careful about exact wording, dates, source identity, and version differences.", "scores": {"detective": 2, "keeper": 1}}, {"text": "I name or annotate things so future-me can remember why they matter.", "scores": {"keeper": 2, "planner": 1}}, {"text": "My naming changes depending on the tool, medium, or experiment I am trying.", "scores": {"creative": 2, "responder": 1}}]}, {"id": 7, "text": "You discover several similar files and are no longer certain which one is current. What is your instinct?", "answers": [{"text": "Compare them, keep the correct version, and restore a clearer structure.", "scores": {"planner": 2, "detective": 1}}, {"text": "Open the likely candidates, use the one that works, and move on.", "scores": {"responder": 2, "creative": 1}}, {"text": "Decide which version best fits the current stage and future direction of the project.", "scores": {"strategist": 2, "planner": 1}}, {"text": "Inspect dates, contents, tracked changes, and metadata before deciding.", "scores": {"detective": 2, "keeper": 1}}, {"text": "Look for notes, email trails, or a log explaining what changed and why.", "scores": {"keeper": 2, "detective": 1}}, {"text": "Merge the useful parts or create a cleaner replacement.", "scores": {"creative": 2, "responder": 1}}]}, {"id": 8, "text": "Suppose your usual computer is unavailable tomorrow. Which thought is closest to your honest reaction?", "answers": [{"text": "Annoying, but my important material is backed up and organised elsewhere.", "scores": {"planner": 2, "detective": 1}}, {"text": "I will probably recover most things through cloud accounts, search, messages, and improvisation.", "scores": {"responder": 2, "creative": 1}}, {"text": "I would worry most about losing momentum across the wider project.", "scores": {"strategist": 2, "planner": 1}}, {"text": "I would first work out exactly what was protected, current, missing, or recoverable.", "scores": {"detective": 2, "planner": 1}}, {"text": "I would rely on my notes, logs, and saved context to reconstruct where I left off.", "scores": {"keeper": 2, "strategist": 1}}, {"text": "I would set up a temporary workflow and find another route to keep working.", "scores": {"creative": 2, "responder": 1}}]}]};
-const ASSETS={planner:"assets/planner-owl.png",responder:"assets/resourceful-racoon.png",strategist:"assets/thinker-elephant.png",detective:"assets/detail-meerkat.png",keeper:"assets/keeper-otter.png",creative:"assets/creative-fox.png"};
-const PROJECT_URL=location.protocol.startsWith("http")?location.href.split("#")[0]:"https://your-github-username.github.io/rdm-style-evaluator/";
-const EMBEDDED_QR="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATgAAAE4CAIAAABAHXg9AAAGb0lEQVR4nO3dwY1sNRRAQQaRAFGQDcGSDVEQQhOBhYx8ZZ+ZqnXr/dd/+siLK9tfn8/nF+Btv95+AeC/CRUChAoBQoUAoUKAUCFAqBAgVAgQKgQIFQKECgFChQChQoBQIUCoECBUCBAqBAgVAoQKAUKFAKFCgFAhQKgQ8NupB/3+x5+nHjXqn7//2vr87vfaff4pq/d87fvees9bTv0erKgQIFQIECoECBUChAoBQoUAoULAsTnqymtzxVNemx/ees6t569819+bFRUChAoBQoUAoUKAUCFAqBAgVAgYn6OunJo7Tc/9Tn1+er/l7tzy1v/b7nNee89bc1orKgQIFQKECgFChQChQoBQIUCoEHBtjvpdnZqzrZ7z2vm9u+9ZOY/3NVZUCBAqBAgVAoQKAUKFAKFCgFAhwBz1f9qdH06b3o/62jnJP40VFQKECgFChQChQoBQIUCoECBUCLg2R63PzXbnltOfP+W7/rv135sVFQKECgFChQChQoBQIUCoECBUCBifo9bPcX1t3+nKa3Pd1+axdVZUCBAqBAgVAoQKAUKFAKFCgFAh4Ngctb7fb1dlvrpy6v1Pfd/d389P+71ZUSFAqBAgVAgQKgQIFQKECgFChYCvz+dz5EGn9itOm74X9NT3PTUnvLWP9NZ+12m35rdWVAgQKgQIFQKECgFChQChQoBQIeDYHHXltTlk5TnT895pr33fW/PYU3NXKyoECBUChAoBQoUAoUKAUCFAqBAwPkddmb4/c3r/52v7J1+7p3RX/e81/f9pRYUAoUKAUCFAqBAgVAgQKgQIFQKO3Y96yq37Nl+bm00//7W54vRcdPc5K871BZaECgFChQChQoBQIUCoECBUCDg2R92da03vOz01Z5ve5zm9f/WnzXtPeW1/rxUVAoQKAUKFAKFCgFAhQKgQIFQIuHau78pr59C+tl9xeh/mrfNyb73/rlu/BysqBAgVAoQKAUKFAKFCgFAhQKgQML4fdVr9vNlb59Puqpy3vKuy79eKCgFChQChQoBQIUCoECBUCBAqBBybo97aL7ry2rmsr91Heur5p85VvjWH3+V+VGBJqBAgVAgQKgQIFQKECgFChYBr+1Gn537T+0Jfm/vd2rc5PQd+bf68Mj2ft6JCgFAhQKgQIFQIECoECBUChAoBx+5HnT4f9bU57a76fteV1+5lXbk1DzdHhR9EqBAgVAgQKgQIFQKECgFChYBj+1FXbs2vTs3rTs33Xtu/unLq7zW9H/i1c4bdjwoIFQqECgFChQChQoBQIUCoEHBsP+quyn7I6fNap/dn3toHO61y3rL9qPCDCBUChAoBQoUAoUKAUCFAqBAwfj9qfY73Xed10/stXztXedf073aXFRUChAoBQoUAoUKAUCFAqBAgVAgYP9f3u+7nrNwLuvLa+7/2nF3Tv3MrKgQIFQKECgFChQChQoBQIUCoEHDtftRpt+63vHUv6O777H6+PudccT8qcIxQIUCoECBUCBAqBAgVAoQKAeNz1JVTc7bXzl99bW58ak5YP3d3+v3tRwWECgVChQChQoBQIUCoECBUCPj6fD5HHnRr/+H0fsLp+eSu6X2h3/We25XX7pVdsaJCgFAhQKgQIFQIECoECBUChAoBx+aoddPz0lvnx1bmuqeev/vvTs/DzVHhBxEqBAgVAoQKAUKFAKFCgFAh4Ni5vq+d+7py6t7RW/O3W/O9184BvrVvdsX9qIBQoUCoECBUCBAqBAgVAoQKAeP3o752X+ipz5+ax67U7zt9bQ68Upn/W1EhQKgQIFQIECoECBUChAoBQoWA8TnqymvztGn1c2VX7zN9vvFr96buvqdzfeEHESoECBUChAoBQoUAoUKAUCHg2hy17tb9qLfucX1t/+etc4mn594rVlQIECoECBUChAoBQoUAoUKAUCHAHPWwW3O2W+cA7z5/+vMrlX2/K1ZUCBAqBAgVAoQKAUKFAKFCgFAh4Noc9bXzeG/NP0/tq9x9zqnP1+elt/7uu6yoECBUCBAqBAgVAoQKAUKFAKFCwNfn8znyoNfmTiuVfYm35oenvHZ+7/TfxX5UQKhQIFQIECoECBUChAoBQoWAY3NUYI4VFQKECgFChQChQoBQIUCoECBUCBAqBAgVAoQKAUKFAKFCgFAhQKgQIFQIECoECBUChAoBQoUAoUKAUCFAqBAgVAj4FzHv8gEH4q5oAAAAAElFTkSuQmCC";
-const tieOrder=["planner","keeper","detective","strategist","creative","responder"];
-const state={index:0,answers:Array(QUIZ.questions.length).fill(null),scores:Object.fromEntries(Object.keys(QUIZ.types).map(k=>[k,0])),winner:null};
-const $=id=>document.getElementById(id),screens={intro:$("introScreen"),quiz:$("quizScreen"),result:$("resultScreen")};
-function showScreen(name){Object.values(screens).forEach(s=>s.classList.remove("active"));screens[name].classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
-function home(){state.index=0;showScreen("intro");closeMenu()}
-function renderQuestion(){const q=QUIZ.questions[state.index];$("questionText").textContent=q.text;$("answers").innerHTML="";q.answers.forEach((answer,i)=>{const b=document.createElement("button");b.className="answer"+(state.answers[state.index]===i?" selected":"");b.setAttribute("aria-pressed",state.answers[state.index]===i);b.innerHTML=`<span class="answer-letter">${String.fromCharCode(65+i)}</span><span>${answer.text}</span>`;b.onclick=()=>{state.answers[state.index]=i;renderQuestion()};$("answers").appendChild(b)});$("nextBtn").disabled=state.answers[state.index]===null;$("backBtn").style.visibility=state.index===0?"hidden":"visible";$("nextBtn").textContent=state.index===QUIZ.questions.length-1?"Reveal my result ✨":"Next question →";$("progressLabel").textContent=`Question ${state.index+1} of ${QUIZ.questions.length}`;$("progressFill").style.width=((state.index+1)/QUIZ.questions.length*100)+"%"}
-function calculateScores(){Object.keys(state.scores).forEach(k=>state.scores[k]=0);state.answers.forEach((a,qi)=>Object.entries(QUIZ.questions[qi].answers[a].scores).forEach(([k,v])=>state.scores[k]+=v));state.winner=Object.keys(state.scores).sort((a,b)=>(state.scores[b]-state.scores[a])||(tieOrder.indexOf(a)-tieOrder.indexOf(b)))[0];return state.winner}
+const repositories = [
+ {id:"REP001", name:"CUHK Research Data Repository", short:"CUHK RDR", type:"Institutional / Generalist", subjects:["Other / General"], maxGB:999999, doi:true, embargo:true, private:true, code:false, cuhk:true, api:true, best:"CUHK researchers with general research datasets", limits:"File size 5 GB by default; adjustable upon request.", notes:"Strong first option for CUHK-affiliated researchers when no discipline-specific repository is required."},
+ {id:"REP002", name:"Figshare", short:"Figshare", type:"Generalist", subjects:["Other / General"], maxGB:20, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"General datasets needing DOI and sharing options", limits:"20 GB dataset limit.", notes:"Useful general-purpose alternative."},
+ {id:"REP003", name:"GitHub", short:"GitHub", type:"Code / Generalist", subjects:["Software / Code"], maxGB:5, doi:false, embargo:false, private:true, code:true, cuhk:false, api:true, best:"Software, code, collaboration, and version control", limits:"Recommended maximum dataset size 5 GB.", notes:"Best for code; pair with Zenodo if a DOI-archived software release is needed."},
+ {id:"REP004", name:"OSF", short:"OSF", type:"Generalist / Project", subjects:["Other / General"], maxGB:50, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Project-based research collaboration and general datasets", limits:"50 GB public / 5 GB private.", notes:"Good for project workflows and collaboration."},
+ {id:"REP005", name:"Zenodo", short:"Zenodo", type:"Generalist", subjects:["Other / General"], maxGB:50, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Multidisciplinary datasets needing DOI and embargo", limits:"50 GB dataset limit.", notes:"Popular general repository; useful alternative for general datasets."},
+ {id:"REP006", name:"Cambridge Crystallographic Data Centre", short:"CCDC", type:"Subject-specific", subjects:["Chemistry / Crystallography"], maxGB:.1, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Crystallographic structure data", limits:"Specific accepted formats only.", notes:"Recommended first for crystallography because it is discipline-recognised."},
+ {id:"REP007", name:"HEPData", short:"HEPData", type:"Subject-specific", subjects:["Particle Physics"], maxGB:.05, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Particle physics data", limits:"Specific formats; YAML file limit applies.", notes:"Recommended first for particle physics data."},
+ {id:"REP008", name:"National Genomics Data Center", short:"NGDC", type:"Subject-specific", subjects:["Genomics"], maxGB:9999, doi:false, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Biological genomics data", limits:"Size limit unknown in matrix.", notes:"Recommended first for genomics data where suitable."},
+ {id:"REP009", name:"RCSB PDB", short:"RCSB PDB", type:"Subject-specific", subjects:["Proteomics","Structural Biology / Protein Structures"], maxGB:999999, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Protein structure data", limits:"Standard structural format parameters.", notes:"Top priority specialized engine for macromolecular coordinates."},
+ {id:"REP010", name:"ProteomeCentral", short:"ProteomeCentral", type:"Subject-specific", subjects:["Proteomics"], maxGB:.015, doi:true, embargo:true, private:false, code:false, cuhk:false, api:true, best:"Proteomics data", limits:"15 MB for web interface upload only; DOI for complete submission.", notes:"Use for proteomics where it matches submission needs."},
+ {id:"REP011", name:"Mendeley Data", short:"Mendeley Data", type:"Generalist", subjects:["Other / General"], maxGB:100, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"General datasets up to 100 GB", limits:"100 GB dataset and file limit.", notes:"Good option when dataset size exceeds smaller generalist repositories."},
+ {id:"REP012", name:"ScienceDB", short:"ScienceDB", type:"Generalist", subjects:["Other / General"], maxGB:1000, doi:true, embargo:true, private:true, code:false, cuhk:false, api:true, best:"Very large general datasets", limits:"Up to 1 TB.", notes:"Strong option for very large interdisciplinary/general datasets."}
+];
 
-function launchConfetti(){
-  if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+const questions = [
+ {id:"Q01", title:"Which subject best describes your research data?", type:"single", required:true, options:["Chemistry / Crystallography","Particle Physics","Genomics","Proteomics","Structural Biology / Protein Structures","Software / Code","Other / General"]},
+ {id:"Q02", title:"Approximately how large is your dataset?", type:"single", required:true, options:["<5 GB","5–20 GB","20–50 GB","50–100 GB","100–1000 GB",">1000 GB","I'm not sure"]},
+ {id:"Q03", title:"Approximately how large is your largest individual file?", type:"single", required:true, options:["<100 MB","100 MB–1 GB","1–5 GB","5–20 GB",">20 GB","I'm not sure"]},
+ {id:"Q04", title:"What features do you need from the repository?", subtitle:"Select all that apply.", type:"multi", required:true, options:["DOI","Embargo","Private sharing","Collaborator access","API access"]},
+ {id:"Q05", title:"Does your research data include software or code?", type:"single", required:true, options:["No","Yes, alongside other research data","Yes, software/code is my primary research output","I'm not sure"]},
+ {id:"Q06", title:"Do any of the following apply?", type:"multi", required:false, options:["My funder requires a specific repository.","My journal requires a specific repository.","My institution requires an institutional repository.","I don't have any specific requirements."]},
+ {id:"Q07", title:"Do you already have a preferred data licence for sharing your data?", type:"single", required:false, options:["CC0","CC BY","CC BY-NC","No preference","I'm not sure"]}
+];
 
-  const canvas=$("confettiCanvas");
-  const ctx=canvas.getContext("2d");
-  const dpr=Math.min(window.devicePixelRatio||1,2);
+let step = -1;
+let answers = {};
+const main = document.getElementById("main");
+const side = document.getElementById("side");
+function renderSide(){
+  side.innerHTML = `
+    <h3>About Repository Selection</h3>
+    <p class="small">Choosing an appropriate repository helps improve the discoverability, accessibility, and long-term preservation of research data. It can also help satisfy funder, journal, and institutional requirements.</p>
+    <h3 style="margin-top:22px">Repository Overview</h3>
+    <p class="small">Recommendations may include institutional, generalist, and subject-specific repositories depending on your responses.</p>
+    ${repositories.slice(0,6).map(r=>`
+      <div class="repo-card">
+        <strong>${r.short}</strong>
+        <div class="small">${r.type}</div>
+        <span class="tag">${r.doi ? "DOI" : "No DOI"}</span>
+        <span class="tag">${r.embargo ? "Embargo" : "No embargo"}</span>
+        <span class="tag">${r.maxGB===999999 ? "Large/Unlimited" : r.maxGB===null ? "Size unknown" : r.maxGB+" GB"}</span>
+      </div>`).join("")}
+  `;
+}
 
-  function resize(){
-    canvas.width=Math.floor(window.innerWidth*dpr);
-    canvas.height=Math.floor(window.innerHeight*dpr);
-    canvas.style.width=window.innerWidth+"px";
-    canvas.style.height=window.innerHeight+"px";
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
+function welcome(){
+  step = -1;
+  answers = {};
+  main.innerHTML = `
+    <h1>Repository Advisor</h1>
+    <p><em>This tool helps researchers identify suitable repositories for sharing and preserving research data.</em></p>
+    <p>Complete a short consultation to receive repository recommendations tailored to your research discipline, data characteristics, repository requirements, and sharing preferences.</p>
+    <div class="kpis">
+      <div class="kpi">🧭 Guided consultation</div>
+      <div class="kpi">⏱ About 2 minutes</div>
+      <div class="kpi">📦 Multiple recommendations</div>
+    </div>
+    <div class="warning"><b>Important:</b> Repository recommendations are provided as decision support. Repository policies and requirements may change over time and should always be verified before depositing research data.</div>
+    <div class="actions"><button class="button" onclick="next()">Start Consultation</button></div>
+  `;
+  renderSide();
+}
 
-  resize();
-
-  const colors=["#8f1d8f","#168f93","#f4a000","#ef5b78","#5b8def","#6dbb75"];
-  const pieces=[];
-  const count=Math.min(150,Math.max(90,Math.floor(window.innerWidth/9)));
-
-  for(let i=0;i<count;i++){
-    const fromLeft=i%2===0;
-    pieces.push({
-      x:fromLeft?-20:window.innerWidth+20,
-      y:window.innerHeight*.18+Math.random()*window.innerHeight*.25,
-      vx:(fromLeft?1:-1)*(3+Math.random()*7),
-      vy:-4-Math.random()*8,
-      gravity:.16+Math.random()*.08,
-      drag:.985,
-      rotation:Math.random()*Math.PI,
-      spin:(Math.random()-.5)*.28,
-      size:6+Math.random()*8,
-      color:colors[Math.floor(Math.random()*colors.length)],
-      life:0,
-      maxLife:115+Math.random()*45,
-      shape:Math.random()>.22?"rect":"circle"
-    });
-  }
-
-  let frame=0;
-  function animate(){
-    frame++;
-    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
-
-    for(const p of pieces){
-      p.life++;
-      p.vx*=p.drag;
-      p.vy+=p.gravity;
-      p.x+=p.vx;
-      p.y+=p.vy;
-      p.rotation+=p.spin;
-
-      const alpha=Math.max(0,1-p.life/p.maxLife);
-      ctx.save();
-      ctx.globalAlpha=alpha;
-      ctx.translate(p.x,p.y);
-      ctx.rotate(p.rotation);
-      ctx.fillStyle=p.color;
-
-      if(p.shape==="circle"){
-        ctx.beginPath();
-        ctx.arc(0,0,p.size*.42,0,Math.PI*2);
-        ctx.fill();
-      }else{
-        ctx.fillRect(-p.size/2,-p.size*.3,p.size,p.size*.6);
-      }
-      ctx.restore();
+function next(){
+  if(step >= 0){
+    const q = questions[step];
+    if(q.required && (!answers[q.id] || answers[q.id].length === 0)){
+      alert("Please choose an answer first.");
+      return;
     }
-
-    if(frame<180)requestAnimationFrame(animate);
-    else ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
   }
+  step++;
+  if(step >= questions.length){ results(); return; }
+  renderQuestion();
+}
 
-  requestAnimationFrame(animate);
+function back(){
+  if(step <= 0){ welcome(); return; }
+  step--;
+  renderQuestion();
 }
-function showResult(){preparedCard=null;preparingCard=null;const winner=calculateScores(),r=QUIZ.types[winner];$("resultTitle").textContent=r.name;$("resultAnimal").textContent=r.animal;$("resultMascot").src=ASSETS[winner];$("resultMascot").alt=r.animal;$("resultDescription").textContent=r.description;$("resultSuperpower").textContent=r.superpower;$("resultTip").textContent=r.tip;$("styleBox").style.background=r.soft;const max=Math.max(...Object.values(state.scores));$("scoreBars").innerHTML=Object.entries(state.scores).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="score-row"><span>${QUIZ.types[k].name}</span><div class="bar" aria-label="${QUIZ.types[k].name} score ${v}"><div style="width:${Math.round(v/max*100)}%"></div></div><strong>${v}</strong></div>`).join("");showScreen("result");launchConfetti();}
-function openShare(){const r=QUIZ.types[state.winner];$("previewMascot").src=ASSETS[state.winner];$("previewTitle").textContent=r.name;$("previewDescription").textContent=r.description;$("shareModal").classList.add("open");$("closeModal").focus();prepareDownloadCard()}
-function closeShare(){$("shareModal").classList.remove("open")}
-function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)}
-function shareText(){const r=QUIZ.types[state.winner];return `My strongest Research Data Management style is ${r.name}. ${r.description}`}
-function popup(url){window.open(url,"_blank","noopener,noreferrer,width=760,height=680")}
-async function copyLink(){try{await navigator.clipboard.writeText(PROJECT_URL);toast("Link copied") }catch{toast("Copy unavailable")}}
-function shareNetwork(network){const u=encodeURIComponent(PROJECT_URL),t=encodeURIComponent(shareText());const urls={linkedin:`https://www.linkedin.com/sharing/share-offsite/?url=${u}`,facebook:`https://www.facebook.com/sharer/sharer.php?u=${u}`,threads:`https://www.threads.net/intent/post?text=${t}%20${u}`,x:`https://twitter.com/intent/tweet?text=${t}&url=${u}`,substack:`https://substack.com/notes`};popup(urls[network])}
-function loadImage(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src})}
-function drawImageContain(ctx,img,x,y,w,h){const scale=Math.min(w/img.naturalWidth,h/img.naturalHeight),dw=img.naturalWidth*scale,dh=img.naturalHeight*scale;ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh)}
-function drawSection(ctx,label,text,x,y,w,accent){
-  ctx.fillStyle=accent;
-  ctx.font="800 26px system-ui";
-  ctx.fillText(label,x,y);
-  ctx.fillStyle="#34435e";
-  ctx.font="400 23px system-ui";
-  return wrap(ctx,text,x,y+50,w,34);
+
+function selectSingle(id, value){
+  answers[id] = [value];
+  renderQuestion();
 }
-async function makeQrCanvas(size=180){
-  try{
-    const image=await loadImage(EMBEDDED_QR);
-    const canvas=document.createElement("canvas");
-    canvas.width=size;
-    canvas.height=size;
-    const c=canvas.getContext("2d");
-    c.fillStyle="#ffffff";
-    c.fillRect(0,0,size,size);
-    c.drawImage(image,0,0,size,size);
-    return canvas;
-  }catch(error){
-    console.error("Could not load embedded QR code:",error);
-    return null;
+
+function toggleMulti(id, value){
+  if(!answers[id]) answers[id] = [];
+  if(answers[id].includes(value)){
+    answers[id] = answers[id].filter(x=>x!==value);
+  } else {
+    answers[id].push(value);
   }
+  renderQuestion();
 }
-async function buildDownloadCard(){
-  const r=QUIZ.types[state.winner];
-  const canvas=document.createElement("canvas");
-  const ctx=canvas.getContext("2d");
 
-  canvas.width=1200;
-  canvas.height=1600;
-
-  const grad=ctx.createLinearGradient(0,0,1200,1600);
-  grad.addColorStop(0,"#fffaf3");
-  grad.addColorStop(.52,r.soft);
-  grad.addColorStop(1,"#edf8f5");
-  ctx.fillStyle=grad;
-  ctx.fillRect(0,0,1200,1600);
-
-  for(let y=0;y<1600;y+=6){
-    ctx.fillStyle=`rgba(16,38,77,${y%12===0?.014:.006})`;
-    ctx.fillRect(0,y,1200,1);
+// Uses double quotes for safety against strings with apostrophes
+function renderQuestion(){
+  const q = questions[step];
+  const pct = Math.round(((step+1)/questions.length)*100);
+  let opts = "";
+  if(q.type==="single"){
+    opts = q.options.map(o=>`
+      <button class="option ${(answers[q.id]||[]).includes(o)?'selected':''}" onclick="selectSingle('${q.id}', \`${o}\`)">${o}</button>
+    `).join("");
+  } else {
+    const selected = answers[q.id] || [];
+    opts = `<div class="checkbox-grid">` + q.options.map(o=>`
+      <button class="option ${selected.includes(o)?'selected':''}" onclick="toggleMulti('${q.id}', \`${o}\`)">${o}</button>
+    `).join("") + `</div>`;
   }
-
-  ctx.strokeStyle="rgba(16,38,77,.14)";
-  ctx.lineWidth=3;
-  roundRect(ctx,48,48,1104,1504,38);
-  ctx.stroke();
-
-  const [logo,mascot]=await Promise.all([
-    loadImage("assets/data-matters-logo.png").catch(error=>{console.warn("Logo unavailable:",error);return null}),
-    loadImage(ASSETS[state.winner]).catch(error=>{console.warn("Mascot unavailable:",error);return null})
-  ]);
-
-  if(logo)drawImageContain(ctx,logo,470,72,260,130);
-
-  ctx.textAlign="center";
-  ctx.fillStyle="#168f93";
-  ctx.font="800 29px system-ui";
-  ctx.fillText("YOUR STRONGEST RDM STYLE",600,245);
-
-  if(mascot)drawImageContain(ctx,mascot,375,285,450,450);
-
-  ctx.fillStyle="#10264d";
-  ctx.font="900 55px system-ui";
-  wrapCentered(ctx,r.name,600,790,1020,64);
-
-  ctx.fillStyle="#647189";
-  ctx.font="700 29px system-ui";
-  ctx.fillText(r.animal,600,875);
-
-  ctx.strokeStyle="rgba(16,38,77,.12)";
-  ctx.lineWidth=2;
-  ctx.beginPath();
-  ctx.moveTo(92,920);
-  ctx.lineTo(1108,920);
-  ctx.stroke();
-
-  ctx.textAlign="left";
-
-  let y=980;
-  y=drawSection(ctx,"YOUR STYLE",r.description,95,y,1010,"#2f7d45")+42;
-  y=drawSection(ctx,"YOUR RDM SUPERPOWER",r.superpower,95,y,1010,"#168f93")+42;
-  y=drawSection(ctx,"A PRACTICAL NEXT STEP",r.tip,95,y,1010,"#d98200")+34;
-
-  const qr=await makeQrCanvas(150);
-
-  const footerY=1425;
-  ctx.textAlign="left";
-  ctx.fillStyle="#741277";
-  ctx.font="800 24px system-ui";
-  ctx.fillText("Data Matters @ CUHK",95,footerY);
-  ctx.fillStyle="#647189";
-  ctx.font="700 20px system-ui";
-  ctx.fillText("RDM Style Evaluator",95,footerY+36);
-  ctx.fillStyle="#647189";
-  ctx.font="400 17px system-ui";
-  ctx.fillText("A playful reflection on research data habits",95,footerY+68);
-
-  if(qr){
-    const boxX=870,boxY=1340,boxSize=190;
-    ctx.fillStyle="rgba(255,255,255,.93)";
-    roundRect(ctx,boxX,boxY,boxSize,boxSize,22);
-    ctx.fill();
-
-    ctx.strokeStyle="rgba(16,38,77,.10)";
-    ctx.lineWidth=2;
-    roundRect(ctx,boxX,boxY,boxSize,boxSize,22);
-    ctx.stroke();
-
-    ctx.drawImage(qr,boxX+20,boxY+16,150,150);
-
-    ctx.fillStyle="#10264d";
-    ctx.font="700 15px system-ui";
-    ctx.textAlign="center";
-    ctx.fillText("Scan to take the quiz",boxX+boxSize/2,boxY+178);
-  }
-
-  return {
-    href:canvas.toDataURL("image/png"),
-    filename:`rdm-style-${state.winner}.png`
-  };
+  main.innerHTML = `
+    <div class="progress-wrap"><div class="progress" style="width:${pct}%"></div></div>
+    <p class="small">Question ${step+1} of ${questions.length}</p>
+    <h2>${q.title}</h2>
+    ${q.subtitle ? `<p>${q.subtitle}</p>` : ""}
+    ${opts}
+    <div class="actions">
+      <button class="button secondary" onclick="back()">← Back</button>
+      <button class="button" onclick="next()">${step===questions.length-1 ? "See Recommendation" : "Next →"}</button>
+    </div>
+  `;
+  renderDynamicSide();
 }
-let preparedCard=null;
-let preparingCard=null;
 
-function prepareDownloadCard(){
-  const button=$("downloadCardBtn");
-  preparedCard=null;
-  button.disabled=true;
-  button.textContent="Preparing result card…";
-  preparingCard=buildDownloadCard()
-    .then(card=>{
-      preparedCard=card;
-      button.disabled=false;
-      button.textContent="↓ Download Result Card";
-      return card;
-    })
-    .catch(error=>{
-      console.error("Could not prepare result card:",error);
-      preparedCard=null;
-      preparingCard=null;
-      button.disabled=false;
-      button.textContent="Try preparing again";
-      toast("The result card could not be prepared");
-      return null;
+function renderDynamicSide(){
+  const top = calculateScores().slice(0,4);
+  side.innerHTML = `
+    <h3>Live Shortlist</h3>
+    <p class="small">Updates dynamically based on your active selections.</p>
+    ${top.map((r,i)=>`
+      <div class="rankrow">
+        <div><b>${i+1}. ${r.short}</b><br><span class="small">${r.best}</span></div>
+        <span class="pill">${r.calculatedScore}</span>
+      </div>
+    `).join("")}
+  `;
+}
+
+function calculateScores(){
+  return repositories.map(r => {
+    let score = 0;
+    let eligible = true;
+    let reasons = { discipline: "General/Other multidisciplinary coverage.", compatibility: "Supports your dataset size configuration.", features: [], requirements: "Compatible with default mandate selections.", licence: "Supports standard licensing frameworks." };
+    
+    const sub = answers.Q01 ? answers.Q01[0] : "";
+    const isGeneralist = r.subjects.includes("Other / General");
+
+if (!isGeneralist && !r.subjects.includes(sub)) {
+    eligible = false;
+}
+    if (sub && r.subjects.includes(sub)) { score += 35; reasons.discipline = "Subject-specific repository for your field."; }
+    else if (sub === "Software / Code" && r.code) { score += 35; reasons.discipline = "Optimized layout environment for version control."; }
+
+   const size = answers.Q02 ? answers.Q02[0] : "";
+
+const requiredSize = {
+    "<5 GB": 5,
+    "5–20 GB": 20,
+    "20–50 GB": 50,
+    "50–100 GB": 100,
+    "100–1000 GB": 1000,
+    ">1000 GB": 1000
+};
+
+if (requiredSize[size] !== undefined) {
+    if (r.maxGB >= requiredSize[size]) {
+        score += 20;
+        reasons.compatibility = "Supports your dataset size.";
+    } else {
+        eligible = false;
+        reasons.compatibility = "Repository capacity is below your dataset size requirement.";
+    }
+}
+
+    const feats = answers.Q04 || [];
+    feats.forEach(f => {
+      if (f === "DOI" && r.doi) { score += 15; reasons.features.push("DOI"); }
+      if (f === "Embargo" && r.embargo) { score += 15; reasons.features.push("Embargo"); }
+      if (f === "API access" && r.api) { score += 15; reasons.features.push("API"); }
     });
+    
+    if (reasons.features.length === 0) { reasons.features = ["Standard features"]; }
+
+    return {
+    ...r,
+    eligible,
+    calculatedScore: score,
+    mappedReasons: reasons
+};
+  })
+.filter(r => r.eligible)
+.sort((a,b) => b.calculatedScore - a.calculatedScore);
 }
 
-function downloadCard(){
-  if(!preparedCard){
-    if(!preparingCard)prepareDownloadCard();
-    toast("Your result card is still being prepared");
-    return;
-  }
-  const a=document.createElement("a");
-  a.href=preparedCard.href;
-  a.download=preparedCard.filename;
-  a.style.display="none";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  toast("Result card downloaded");
+function results(){
+  const ranked = calculateScores();
+  const top = ranked[0];
+  const alts = ranked.slice(1,4);
+
+  main.innerHTML = `
+    <p class="small">Consultation complete!</p>
+    <div class="rec-card">
+        <div class="rec-header">
+            <h2>Recommended Repository</h2>
+            <div class="repo-title">${top.name}</div>
+        </div>
+        <div class="rec-body">
+            <div class="rec-section-title">Why this repository?</div>
+            <div class="reason-grid">
+                <div class="reason-item">
+                    <div class="reason-label">Research discipline</div>
+                    <div class="reason-value">${top.mappedReasons.discipline}</div>
+                </div>
+                <div class="reason-item">
+                    <div class="reason-label">Dataset compatibility</div>
+                    <div class="reason-value">${top.mappedReasons.compatibility}</div>
+                </div>
+                <div class="reason-item">
+                    <div class="reason-label">Repository features</div>
+                    <div class="reason-value">
+                        <div class="feature-tags">
+                            ${top.mappedReasons.features.map(f => `<span class="tag">${f}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+                <div class="reason-item">
+                    <div class="reason-label">Repository requirements</div>
+                    <div class="reason-value">Compatible with your selected institutional requirements.</div>
+                </div>
+                <div class="reason-item">
+                    <div class="reason-label">Licence</div>
+                    <div class="reason-value">Supports your preferred licence terms.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="warning"><b>Check before depositing:</b> Repository requirements and policies can change over time. This prototype gives a recommendation based on the current matrix, not final official advice.</div>
+    
+    <h3>Alternative repositories to consider</h3>
+    ${alts.map(a=>`
+      <div class="rankrow">
+        <div><b>${a.short}</b><br><span class="small">${a.best}</span></div>
+        <span class="pill">Alternative</span>
+      </div>`).join("")}
+      
+    <div class="actions">
+      <button class="button secondary" onclick="welcome()">Start Over</button>
+      <button class="button" onclick="copySummary()">Copy Summary</button>
+    </div>
+  `;
+
+  side.innerHTML = `
+    <h3>Consultation Summary</h3>
+    <div class="repo-card">
+      <strong>Your parameters</strong>
+      <p class="small">
+      Discipline: ${answers.Q01 ? answers.Q01[0] : "—"}<br>
+      Capacity: ${answers.Q02 ? answers.Q02[0] : "—"}<br>
+      Features: ${(answers.Q04||[]).join(", ") || "—"}
+      </p>
+    </div>
+    <h3>Repository details</h3>
+    <div class="repo-card">
+      <strong>${top.short}</strong>
+      <p class="small">${top.notes}</p>
+      <span class="tag">${top.type}</span>
+    </div>
+  `;
 }
-function roundRect(c,x,y,w,h,r){c.beginPath();c.roundRect?c.roundRect(x,y,w,h,r):(c.rect(x,y,w,h));}
-function wrap(c,text,x,y,max,line){const words=text.split(" ");let row="";for(const word of words){const test=row+word+" ";if(c.measureText(test).width>max&&row){c.fillText(row,x,y);row=word+" ";y+=line}else row=test}c.fillText(row,x,y);return y}
-function wrapCentered(c,text,x,y,max,line){const words=text.split(" ");let row="";const lines=[];for(const word of words){const test=row+word+" ";if(c.measureText(test).width>max&&row){lines.push(row.trim());row=word+" "}else row=test}if(row)lines.push(row.trim());lines.forEach((t,i)=>c.fillText(t,x,y+i*line));return y+(lines.length-1)*line}
-function closeMenu(){$("hamburger").setAttribute("aria-expanded","false");$("mobileMenu").classList.remove("open")}
-$("hamburger").onclick=()=>{const open=$("hamburger").getAttribute("aria-expanded")!=="true";$("hamburger").setAttribute("aria-expanded",open);$("mobileMenu").classList.toggle("open",open)};$("brandHome").onclick=e=>{e.preventDefault();home()};$("startBtn").onclick=()=>{state.index=0;showScreen("quiz");renderQuestion()};$("nextBtn").onclick=()=>{if(state.answers[state.index]===null)return;if(state.index<QUIZ.questions.length-1){state.index++;renderQuestion();window.scrollTo({top:0,behavior:"smooth"})}else showResult()};$("backBtn").onclick=()=>{if(state.index>0){state.index--;renderQuestion()}};$("restartBtn").onclick=()=>{state.index=0;state.answers.fill(null);home()};$("shareBtn").onclick=openShare;$("closeModal").onclick=closeShare;$("shareModal").onclick=e=>{if(e.target===$("shareModal"))closeShare()};document.addEventListener("keydown",e=>{if(e.key==="Escape")closeShare()});document.querySelectorAll(".share-option").forEach(b=>b.onclick=()=>b.dataset.action==="download"?downloadCard():b.dataset.action==="copy"?copyLink():shareNetwork(b.dataset.network));
+
+function copySummary(){
+  const ranked = calculateScores();
+  const top = ranked[0];
+  const text = `Repository Adviser Prototype Summary\nRecommended: ${top.name}\nDiscipline: ${answers.Q01 ? answers.Q01[0] : "—"}\nCapacity: ${answers.Q02 ? answers.Q02[0] : "—"}`;
+  navigator.clipboard.writeText(text).then(()=>alert("Summary copied to clipboard!"));
+}
+
+welcome();
 </script>
-<canvas id="confettiCanvas" aria-hidden="true"></canvas>
-</body></html>
+</body>
+</html>
