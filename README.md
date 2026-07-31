@@ -12,9 +12,10 @@ The Repository Advisor was initiated by **Data Matters @ CUHK** as part of the C
 
 ## Contributors
 
-- **Mar Ticao** – Project lead; concept development, recommendation framework, repository database refinement, UX design, and prototype development.
-- **Mehdi Lotfian** – Technical collaborator; project planning, technical consultation, and front-end development.
-- **Qinqin Zhang** – Repository evaluation framework, project advising, repository database guidance, and coordination through the CUHK Data Champions Programme.
+- **Mar Ticao** – Project lead; concept development, recommendation framework, UX design, repository database refinement, and prototype development.
+- **Qinqin Zhang** – Project advisor; repository guidance, project coordination, and support through the CUHK Data Champions Programme.
+- **Jack Ng** – Technical collaborator; original repository evaluation framework, scoring methodology, and interface development.
+- **Mehdi Lotfian** – Technical consultation, project planning, and front-end development.
 
 ## Status
 
