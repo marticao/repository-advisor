@@ -317,7 +317,7 @@ function results() {
   </div>
   <h3>Repository details</h3>
   <div class="repo-card">
-    <strong>${top.short}</strong>
+    <a href="${top.url}"><strong>${top.short}</strong></a>
     <p class="small">${top.notes}</p>
     <span class="tag">${top.type}</span>
   </div>
