@@ -1,44 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Research Data Repository Adviser Prototype</title>
-<link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research Data Repository Adviser Prototype</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-<div class="app">
-  <div class="navbar">
-    <div class="logo"><a href="#" style="text-decoration:none;color:inherit;">Data Champions @ CUHK</a></div>
-    <!-- Burger menu link triggers onmobile -->
-    <button class="burger-menu" onclick="document.querySelector('.navlinks').classList.toggle('open')">☰</button>
-    <div class="navlinks">
-      <a href="#" class="active">Repository Advisor</a>
-      <a href="https://libguides.lib.cuhk.edu.hk/rdm/home" target="_blank">RDM Resources</a>
-      <a href="https://marticao.github.io/rdm-style-evaluator/" target="_blank">RDM Tools</a>
-      <a href="https://cuhkrdm.substack.com/" target="_blank">Data Matters @ CUHK</a>
+  <div id="rdm-repo-advisor">
+    <div class="app">
+      <div class="navbar">
+        <div class="logo"><a href="#" style="text-decoration:none;color:inherit;">Data Champions @ CUHK</a></div>
+        <button class="burger-menu"
+          onclick="document.querySelector('#rdm-repo-advisor .navlinks').classList.toggle('open')">☰</button>
+        <div class="navlinks">
+          <a href="#" class="active">Repository Advisor</a>
+          <a href="https://libguides.lib.cuhk.edu.hk/rdm/home" target="_blank">RDM Resources</a>
+          <a href="https://marticao.github.io/rdm-style-evaluator/" target="_blank">RDM Tools</a>
+          <a href="https://cuhkrdm.substack.com/" target="_blank">Data Matters @ CUHK</a>
+        </div>
+      </div>
+
+      <div class="grid">
+        <main class="card" id="main"></main>
+        <aside class="card side" id="side"></aside>
+      </div>
     </div>
+
+    <footer>
+      <strong>Data Champions @ CUHK</strong><br>
+      Repository Advisor is a Data Champions @ CUHK initiative supporting responsible research data management.<br><br>
+      <a href="https://libguides.lib.cuhk.edu.hk/rdm/home" target="_blank">RDM Resources</a> ·
+      <a href="https://cuhkrdm.substack.com/" target="_blank">Data Matters @ CUHK</a>
+      <div class="note">
+        * Note: Suggestions are based on your survey answers compared with our current database. Because repository
+        policies and storage limits change over time, please double-check their official rules before depositing your
+        final datasets.
+      </div>
+    </footer>
   </div>
 
-  <div class="grid">
-    <main class="card" id="main"></main>
-    <aside class="card side" id="side"></aside>
-  </div>
-</div>
-
-<!-- Added clear left padding to match grid alignment borders -->
-<footer style="margin-top:36px; padding:24px; border-top:1px solid #d9e5ea; font-size:14px; color:#64748b; max-width:1180px; margin-left:auto; margin-right:auto;">
-<strong>Data Champions @ CUHK</strong><br>
-Repository Advisor is a Data Champions @ CUHK initiative supporting responsible research data management.<br><br>
-<a href="https://libguides.lib.cuhk.edu.hk/rdm/home" target="_blank">RDM Resources</a> ·
-<a href="https://cuhkrdm.substack.com/" target="_blank">Data Matters @ CUHK</a>
-<div style="margin-top:15px; font-size:12px; line-height:1.4; border-top:1px dashed var(--line); padding-top:12px;">
-* Note: Suggestions are based on your survey answers compared with our current database. Because repository policies and storage limits change over time, please double-check their official rules before depositing your final datasets.
-</div>
-</footer>
-
-<script src="repositories.js"></script>
-<script src="questions.js"></script>
-<script src="script.js"></script>
+  <script src="repositories.js"></script>
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
