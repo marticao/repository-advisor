@@ -55,7 +55,6 @@
   text-decoration: none;
   color: var(--navy);
   font-weight: 600;
-  font-size: 14px;
 }
 
 #rdm-repo-advisor .navlinks a.active {
@@ -85,7 +84,7 @@
 }
 
 #rdm-repo-advisor h1 {
-  font-size: 40px;
+  font-size: 48px;
   line-height: 1.06;
   margin: 0 0 18px;
   color: var(--navy);
@@ -205,7 +204,7 @@
 
 #rdm-repo-advisor .repo-card strong {
   display: block;
-  font-size: 16px;
+  font-size: 18px;
   margin-bottom: 4px;
 }
 
@@ -226,7 +225,6 @@
   border-radius: 12px;
   margin: 14px 0;
   color: #7c3f00;
-  font-size: 14px;
 }
 
 #rdm-repo-advisor .rankrow {
@@ -239,7 +237,6 @@
 }
 
 #rdm-repo-advisor .rankrow a {
-  font-size: 14px;
   text-decoration: none;
   color: #6e1b6d;
 }
