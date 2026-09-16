@@ -1,8 +1,8 @@
-// Auto-generated from repositories.csv – edit the CSV then re-run conversion if needed
 const repositories = [
   {
     "id": "REP001",
     "name": "CUHK Research Data Repository",
+    "url": "https://researchdata.cuhk.edu.hk/",
     "short": "CUHK RDR",
     "type": "Institutional / Generalist",
     "subjects": [
@@ -37,6 +37,7 @@ const repositories = [
   {
     "id": "REP002",
     "name": "Figshare",
+    "url": "https://figshare.com/",
     "short": "Figshare",
     "type": "Generalist",
     "subjects": [
@@ -73,6 +74,7 @@ const repositories = [
   {
     "id": "REP003",
     "name": "GitHub",
+    "url": "https://github.com/",
     "short": "GitHub",
     "type": "Code / Generalist",
     "subjects": [
@@ -103,6 +105,7 @@ const repositories = [
   {
     "id": "REP004",
     "name": "OSF",
+    "url": "https://osf.io/",
     "short": "OSF",
     "type": "Generalist / Project",
     "subjects": [
@@ -136,6 +139,7 @@ const repositories = [
   {
     "id": "REP005",
     "name": "Zenodo",
+    "url": "https://zenodo.org/",
     "short": "Zenodo",
     "type": "Generalist",
     "subjects": [
@@ -170,6 +174,7 @@ const repositories = [
   {
     "id": "REP006",
     "name": "Cambridge Crystallographic Data Centre",
+    "url": "https://www.ccdc.cam.ac.uk/",
     "short": "CCDC",
     "type": "Subject-specific",
     "subjects": [
@@ -196,6 +201,7 @@ const repositories = [
   {
     "id": "REP007",
     "name": "HEPData",
+    "url": "https://hepdata.cedar.ac.uk/",
     "short": "HEPData",
     "type": "Subject-specific",
     "subjects": [
@@ -226,6 +232,7 @@ const repositories = [
   {
     "id": "REP008",
     "name": "National Genomics Data Center",
+    "url": "https://ngdc.cncb.ac.cn/",
     "short": "NGDC",
     "type": "Subject-specific",
     "subjects": [
@@ -261,6 +268,7 @@ const repositories = [
   {
     "id": "REP009",
     "name": "RCSB PDB",
+    "url": "https://www.rcsb.org/",
     "short": "RCSB PDB",
     "type": "Subject-specific",
     "subjects": [
@@ -294,6 +302,7 @@ const repositories = [
   {
     "id": "REP010",
     "name": "ProteomeCentral",
+    "url": "https://proteomecentral.proteomexchange.org/?view=datasets",
     "short": "ProteomeCentral",
     "type": "Subject-specific",
     "subjects": [
@@ -329,6 +338,7 @@ const repositories = [
   {
     "id": "REP011",
     "name": "Mendeley Data",
+    "url": "https://data.mendeley.com/",
     "short": "Mendeley Data",
     "type": "Generalist",
     "subjects": [
@@ -363,6 +373,7 @@ const repositories = [
   {
     "id": "REP012",
     "name": "ScienceDB",
+    "url": "https://www.scidb.cn/",
     "short": "ScienceDB",
     "type": "Generalist",
     "subjects": [
