@@ -208,6 +208,15 @@
   margin-bottom: 4px;
 }
 
+#rdm-repo-advisor .repo-card a {
+  text-decoration: none;
+  color: #6e1b6d;
+}
+
+#rdm-repo-advisor .repo-card a:hover {
+  text-decoration: underline;
+}
+
 #rdm-repo-advisor .tag {
   display: inline-block;
   background: #eef2ff;
