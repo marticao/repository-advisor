@@ -17,31 +17,34 @@ function welcome() {
   step = -1;
   answers = {};
   main.innerHTML = `
-    <h1>Repository Advisor</h1>
-    <p><em>This tool helps researchers identify suitable repositories for sharing and preserving research data.</em></p>
-    <p>Complete a short consultation to receive repository recommendations tailored to your research discipline, data characteristics, repository requirements, and sharing preferences.</p>
-    <div class="kpis">
-      <div class="kpi">🧭 Guided consultation</div>
-      <div class="kpi">⏱ About 2 minutes</div>
-      <div class="kpi">📦 Multiple recommendations</div>
-    </div>
-    <div class="warning"><b>Important:</b> Repository recommendations are provided as decision support. Repository policies and requirements may change over time and should always be verified before depositing research data.</div>
-    <div class="actions"><button class="button" onclick="next()">Start Consultation</button></div>
-  `;
+  <h1>Repository Advisor</h1>
+  <p><em>This tool helps researchers identify suitable repositories for sharing and preserving research data.</em></p>
+  <p>Complete a short consultation to receive repository recommendations tailored to your research discipline, data characteristics, repository requirements, and sharing preferences.</p>
+  <div class="kpis">
+    <div class="kpi">🧭 Guided consultation</div>
+    <div class="kpi">⏱ About 2 minutes</div>
+    <div class="kpi">📦 Multiple recommendations</div>
+  </div>
+  <div class="warning">
+    <b>Important:</b> Repository recommendations are provided as decision support. Repository policies and requirements may change over time and should always be verified before depositing research data.
+    <br><br>
+    <b>Disclaimer: </b>The repository recommendations provided in this table are based on the specified requirements and on information about repository characteristics available on their respective websites. The final selection of an appropriate data repository remains at the researcher's discretion.</div>
+  <div class="actions"><button class="button" onclick="next()">Start Consultation</button></div>
+`;
   side.innerHTML = `
-    <h3>About Repository Selection</h3>
-    <p class="small">Choosing an appropriate repository helps improve the discoverability, accessibility, and long-term preservation of research data. It can also help satisfy funder, journal, and institutional requirements.</p>
-    <h3 style="margin-top:22px">Repository Overview</h3>
-    <p class="small">Recommendations may include institutional, generalist, and subject-specific repositories depending on your responses.</p>
-    ${repositories.slice(0, 6).map(r => `
-      <div class="repo-card">
-        <strong>${r.short}</strong>
-        <div class="small">${r.type}</div>
-        <span class="tag">${r.Q04_doi ? "DOI" : "No DOI"}</span>
-        <span class="tag">${r.Q04_embargo ? "Embargo" : "No embargo"}</span>
-        <span class="tag">${r.maxDatasetGB === 999999 ? "Large/Unlimited" : r.maxDatasetGB === null ? "Size unknown" : r.maxDatasetGB + " GB"}</span>
-      </div>`).join("")}
-  `;
+  <h3>About Repository Selection</h3>
+  <p class="small">Choosing an appropriate repository helps improve the discoverability, accessibility, and long-term preservation of research data. It can also help satisfy funder, journal, and institutional requirements.</p>
+  <h3 style="margin-top:22px">Repository Overview</h3>
+  <p class="small">Recommendations may include institutional, generalist, and subject-specific repositories depending on your responses.</p>
+  ${repositories.slice(0, 6).map(r => `
+    <div class="repo-card">
+      <strong>${r.short}</strong>
+      <div class="small">${r.type}</div>
+      <span class="tag">${r.Q04_doi ? "DOI" : "No DOI"}</span>
+      <span class="tag">${r.Q04_embargo ? "Embargo" : "No embargo"}</span>
+      <span class="tag">${r.maxDatasetGB === 999999 ? "Large/Unlimited" : r.maxDatasetGB === null ? "Size unknown" : r.maxDatasetGB + " GB"}</span>
+    </div>`).join("")}
+`;
 }
 
 // Recurring execution: next page button
@@ -90,39 +93,39 @@ function renderQuestion() {
   let opts = "";
   if (q.type === "single") {
     opts = q.options.map(o => `
-      <button class="option ${(answers[q.id] || []).includes(o) ? 'selected' : ''}" onclick="selectSingle('${q.id}', \`${o}\`)">${o}</button>
-    `).join("");
+    <button class="option ${(answers[q.id] || []).includes(o) ? 'selected' : ''}" onclick="selectSingle('${q.id}', \`${o}\`)">${o}</button>
+  `).join("");
   } else {
     const selected = answers[q.id] || [];
     opts = `<div class="checkbox-grid">` + q.options.map(o => `
-      <button class="option ${selected.includes(o) ? 'selected' : ''}" onclick="toggleMulti('${q.id}', \`${o}\`)">${o}</button>
-    `).join("") + `</div>`;
+    <button class="option ${selected.includes(o) ? 'selected' : ''}" onclick="toggleMulti('${q.id}', \`${o}\`)">${o}</button>
+  `).join("") + `</div>`;
   }
   main.innerHTML = `
-    <div class="progress-wrap"><div class="progress" style="width:${pct}%"></div></div>
-    <p class="small">Question ${step + 1} of ${questions.length}</p>
-    <h2>${q.title}</h2>
-    ${q.subtitle ? `<p>${q.subtitle}</p>` : ""}
-    ${opts}
-    <div class="actions">
-      <button class="button secondary" onclick="back()">← Back</button>
-      <button class="button" onclick="next()">${step === questions.length - 1 ? "See Recommendation" : "Next →"}</button>
-    </div>
-  `;
+  <div class="progress-wrap"><div class="progress" style="width:${pct}%"></div></div>
+  <p class="small">Question ${step + 1} of ${questions.length}</p>
+  <h2>${q.title}</h2>
+  ${q.subtitle ? `<p>${q.subtitle}</p>` : ""}
+  ${opts}
+  <div class="actions">
+    <button class="button secondary" onclick="back()">← Back</button>
+    <button class="button" onclick="next()">${step === questions.length - 1 ? "See Recommendation" : "Next →"}</button>
+  </div>
+`;
   renderDynamicSide();
 }
 
 function renderDynamicSide() {
   const top = calculateScores().slice(0, 4);
   side.innerHTML = `
-    <h3>Live Shortlist</h3>
-    <p class="small">Updates dynamically based on your active selections.</p>
-    ${top.map((r, i) => `
-      <div class="rankrow">
-        <div><b>${i + 1}. ${r.short}</b><br><span class="small">${r.best}</span></div>
-      </div>
-    `).join("")}
-  `;
+  <h3>Live Shortlist</h3>
+  <p class="small">Updates dynamically based on your active selections.</p>
+  ${top.map((r, i) => `
+    <div class="rankrow">
+      <div><b>${i + 1}. ${r.short}</b><br><span class="small">${r.best}</span></div>
+    </div>
+  `).join("")}
+`;
   // removed <span class="pill">${r.calculatedScore}</span>
   // from <div><b>${i + 1}. ${r.short}</b><br><span class="small">${r.best}</span></div>
 }
@@ -221,7 +224,7 @@ function calculateScores() {
     // Q07 [10]
     const Q07_license = answers.Q07 ? answers.Q07[0] : "";
     if (Q07_license !== undefined) {
-      if (r.Q07_licenses.includes(Q07_license)) {score += 10;}
+      if (r.Q07_licenses.includes(Q07_license)) { score += 10; }
     }
 
     if (reasons.features.length === 0) { reasons.features = ["Standard features"]; }
@@ -243,86 +246,89 @@ function results() {
   const alts = ranked.slice(1, 4);
 
   main.innerHTML = `
-    <p class="small">Consultation complete!</p>
-    <div class="rec-card">
-        <div class="rec-header">
-            <h2>Recommended Repository</h2>
-            <div class="repo-title">${top.name}</div>
-        </div>
-        <div class="rec-body">
-            <div class="rec-section-title">Why this repository?</div>
-            <div class="reason-grid">
-                <div class="reason-item">
-                    <div class="reason-label">Research discipline</div>
-                    <div class="reason-value">${top.mappedReasons.discipline}</div>
-                </div>
-                <div class="reason-item">
-                    <div class="reason-label">Dataset compatibility</div>
-                    <div class="reason-value">${top.mappedReasons.compatibility}</div>
-                </div>
-                <div class="reason-item">
-                    <div class="reason-label">Repository features</div>
-                    <div class="reason-value">
-                        <div class="feature-tags">
-                            ${top.mappedReasons.features.map(f => `<span class="tag">${f}</span>`).join('')}
-                        </div>
-                    </div>
-                </div>
-                <div class="reason-item">
-                    <div class="reason-label">Repository requirements</div>
-                    <div class="reason-value">Compatible with your selected institutional requirements.</div>
-                </div>
-                <div class="reason-item">
-                    <div class="reason-label">Licence</div>
-                    <div class="reason-value">Supports your preferred licence terms.</div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <p class="small">Consultation complete!</p>
+  <div class="rec-card">
+      <div class="rec-header">
+          <h2>Recommended Repository</h2>
+          <div class="repo-title"><a href="${top.url}">${top.name}</a></div>
+      </div>
+      <div class="rec-body">
+          <div class="rec-section-title">Why this repository?</div>
+          <div class="reason-grid">
+              <div class="reason-item">
+                  <div class="reason-label">Research discipline</div>
+                  <div class="reason-value">${top.mappedReasons.discipline}</div>
+              </div>
+              <div class="reason-item">
+                  <div class="reason-label">Dataset compatibility</div>
+                  <div class="reason-value">${top.mappedReasons.compatibility}</div>
+              </div>
+              <div class="reason-item">
+                  <div class="reason-label">Repository features</div>
+                  <div class="reason-value">
+                      <div class="feature-tags">
+                          ${top.mappedReasons.features.map(f => `<span class="tag">${f}</span>`).join('')}
+                      </div>
+                  </div>
+              </div>
+              <div class="reason-item">
+                  <div class="reason-label">Repository requirements</div>
+                  <div class="reason-value">Compatible with your selected institutional requirements.</div>
+              </div>
+              <div class="reason-item">
+                  <div class="reason-label">Licence</div>
+                  <div class="reason-value">Supports your preferred licence terms.</div>
+              </div>
+          </div>
+      </div>
+  </div>
 
-    <div class="warning"><b>Check before depositing:</b> Repository requirements and policies can change over time. This prototype gives a recommendation based on the current matrix, not final official advice.</div>
+  <div class="warning">
+    <b>Check before depositing:</b> Repository requirements and policies can change over time. This prototype gives a recommendation based on the current matrix, not final official advice.
+    <br><br>
+    <b>Disclaimer: </b>The repository recommendations provided in this table are based on the specified requirements and on information about repository characteristics available on their respective websites. The final selection of an appropriate data repository remains at the researcher's discretion.</div>
+  
+  <h3>Alternative repositories to consider</h3>
+  ${alts.map(a => `
+    <div class="rankrow">
+      <div><b><a href="${a.url}">${a.short}</a></b><br><span class="small">${a.best}</span></div>
+      <span class="pill">Alternative</span>
+    </div>`).join("")}
     
-    <h3>Alternative repositories to consider</h3>
-    ${alts.map(a => `
-      <div class="rankrow">
-        <div><b>${a.short}</b><br><span class="small">${a.best}</span></div>
-        <span class="pill">Alternative</span>
-      </div>`).join("")}
-      
-    <div class="actions">
-      <button class="button secondary" onclick="welcome()">Start Over</button>
-      <button class="button" onclick="copySummary()">Copy Summary</button>
-    </div>
-  `;
+  <div class="actions">
+    <button class="button secondary" onclick="welcome()">Start Over</button>
+    <button class="button" onclick="copySummary()">Copy Summary</button>
+  </div>
+`;
 
   side.innerHTML = `
-    <h3>Consultation Summary</h3>
-    <div class="repo-card">
-      <strong>Your parameters</strong>
-      <p class="small">
-      Discipline: ${answers.Q01 ? answers.Q01[0] : "—"}<br>
-      Dataset capacity: ${answers.Q02 ? answers.Q02[0] : "—"}<br>
-      File capacity: ${answers.Q03 ? answers.Q03[0] : "—"}<br>
-      Features: ${(answers.Q04 || []).join(", ") || "—"}<br>
-      Software/code inclusion: ${answers.Q05}<br>
-      Data licensing: ${answers.Q07}
+  <h3>Consultation Summary</h3>
+  <div class="repo-card">
+    <strong>Your parameters</strong>
+    <p class="small">
+    Discipline: ${answers.Q01 ? answers.Q01[0] : "—"}<br>
+    Dataset capacity: ${answers.Q02 ? answers.Q02[0] : "—"}<br>
+    File capacity: ${answers.Q03 ? answers.Q03[0] : "—"}<br>
+    Features: ${(answers.Q04 || []).join(", ") || "—"}<br>
+    Software/code inclusion: ${answers.Q05}<br>
+    Data licensing: ${answers.Q07}
 
-      </p>
-    </div>
-    <h3>Repository details</h3>
-    <div class="repo-card">
-      <strong>${top.short}</strong>
-      <p class="small">${top.notes}</p>
-      <span class="tag">${top.type}</span>
-    </div>
-  `;
+    </p>
+  </div>
+  <h3>Repository details</h3>
+  <div class="repo-card">
+    <strong>${top.short}</strong>
+    <p class="small">${top.notes}</p>
+    <span class="tag">${top.type}</span>
+  </div>
+`;
 }
 
 function copySummary() {
   const ranked = calculateScores();
   const top = ranked[0];
   // const text = `Repository Adviser Prototype Summary\nRecommended: ${top.name}\nDiscipline: ${answers.Q01 ? answers.Q01[0] : "—"}\nCapacity: ${answers.Q02 ? answers.Q02[0] : "—"}`;
-  const text = `Repository Adviser Prototype Summary\nRecommended: ${top.name}\nDiscipline: ${answers.Q01 ? answers.Q01[0] : "—"}\n Dataset capacity: ${answers.Q02 ? answers.Q02[0] : "—"}\nFile capacity: ${answers.Q03 ? answers.Q03[0] : "—"}\nFeatures: ${(answers.Q04 || []).join(", ") || "—"}\nSoftware/code inclusion: ${answers.Q05}\nData licensing: ${answers.Q07}`
+  const text = `Repository Adviser Prototype Summary\nRecommended: ${top.name}\nDiscipline: ${answers.Q01 ? answers.Q01[0] : "—"}\nDataset capacity: ${answers.Q02 ? answers.Q02[0] : "—"}\nFile capacity: ${answers.Q03 ? answers.Q03[0] : "—"}\nFeatures: ${(answers.Q04 || []).join(", ") || "—"}\nSoftware/code inclusion: ${answers.Q05}\nData licensing: ${answers.Q07}`
   navigator.clipboard.writeText(text).then(() => alert("Summary copied to clipboard!"));
 }
 
