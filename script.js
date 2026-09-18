@@ -1,8 +1,3 @@
-/* ============================================================
-Data is provided by repositories.js and questions.js
-(generated from the CSV files). No fetch / server required.
-============================================================ */
-
 // repositories and questions are defined in the two data files
 // that are loaded before this script.
 
