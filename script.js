@@ -1,7 +1,7 @@
 /* ============================================================
-   Data is provided by repositories.js and questions.js
-   (generated from the CSV files). No fetch / server required.
-   ============================================================ */
+Data is provided by repositories.js and questions.js
+(generated from the CSV files). No fetch / server required.
+============================================================ */
 
 // repositories and questions are defined in the two data files
 // that are loaded before this script.
@@ -127,7 +127,7 @@ function renderDynamicSide() {
   `).join("")}
 `;
   // removed <span class="pill">${r.calculatedScore}</span>
-  // from <div><b>${i + 1}. ${r.short}</b><br><span class="small">${r.best}</span></div>
+  // after <div><b>${i + 1}. ${r.short}</b><br><span class="small">${r.best}</span></div>
 }
 
 function calculateScores() {
@@ -216,10 +216,11 @@ function calculateScores() {
     }
 
     // Q06 [10]
-    const Q06_requirements = answers.Q06 || [];
-    Q06_requirements.forEach(requirement => {
-      if (requirement === "My institution requires an institutional repository." && r.Q06_instituional_repo) { score += 10; }
-    });
+    const Q06_requirement = answers.Q06 ? answers.Q06[0] : "";
+    if (Q06_requirement !== undefined) {
+      if (Q06_requirement === "My funder requires a subject-specific repository." && r.type === "Subject-specific") { score += 10; }
+      if (Q06_requirement === "My journal requires a subject-specific repository." && r.type === "Subject-specific") { score += 10; }
+    }
 
     // Q07 [10]
     const Q07_license = answers.Q07 ? answers.Q07[0] : "";
