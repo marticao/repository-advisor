@@ -201,7 +201,7 @@ const repositories = [
   {
     "id": "REP007",
     "name": "HEPData",
-    "url": "https://hepdata.cedar.ac.uk/",
+    "url": "https://www.hepdata.net/",
     "short": "HEPData",
     "type": "Subject-specific",
     "subjects": [
