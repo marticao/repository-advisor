@@ -2,7 +2,7 @@ const repositories = [
   {
     "id": "REP001",
     "name": "CUHK Research Data Repository",
-    "url": "https://researchdata.cuhk.edu.hk/",
+    "url": "google.com",
     "short": "CUHK RDR",
     "type": "Institutional / Generalist",
     "subjects": [
