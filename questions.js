@@ -73,7 +73,7 @@ const questions = [
   },
   {
     "id": "Q06",
-    "title": "Do any of the following apply?",
+    "title": "Does any of the following apply?",
     "type": "single",
     "required": false,
     "options": [
