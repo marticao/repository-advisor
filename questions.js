@@ -74,12 +74,11 @@ const questions = [
   {
     "id": "Q06",
     "title": "Do any of the following apply?",
-    "type": "multi",
+    "type": "single",
     "required": false,
     "options": [
-      "My funder requires a specific repository.",
-      "My journal requires a specific repository.",
-      "My institution requires an institutional repository.",
+      "My funder requires a subject-specific repository.",
+      "My journal requires a subject-specific repository.",
       "I don't have any specific requirements."
     ]
   },
