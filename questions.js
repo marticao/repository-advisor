@@ -1,4 +1,3 @@
-// Auto-generated from questions.csv
 const questions = [
   {
     "id": "Q01",
@@ -73,9 +72,9 @@ const questions = [
   },
   {
     "id": "Q06",
-    "title": "Does any of the following apply?",
+    "title": "Which of the following apply?",
     "type": "single",
-    "required": false,
+    "required": true,
     "options": [
       "My funder requires a subject-specific repository.",
       "My journal requires a subject-specific repository.",
