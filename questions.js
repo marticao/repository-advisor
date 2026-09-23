@@ -1,7 +1,7 @@
 const questions = [
     {
       "id": "Q06",
-      "title": "Which of the following apply?",
+      "title": "Which of the following best applies to you?",
       "type": "single",
       "required": true,
       "options": [
