@@ -50,6 +50,11 @@ function next() {
       alert("Please choose an answer first.");
       return;
     }
+    // If user prefers institutional repository, skip remaining questions
+    if (q.id === "Q06" && answers.Q06 && answers.Q06[0] === "I prefer to use the institutional repository.") {
+      results(true);
+      return;
+    }
   }
   step++;
   if (step >= questions.length) { results(); return; }
@@ -121,8 +126,8 @@ function renderDynamicSide() {
     </div>
   `).join("")}
 `;
-  // removed <span class="pill">${r.calculatedScore}</span>
-  // after <div><b>${i + 1}. ${r.short}</b><br><span class="small">${r.best}</span></div>
+// Removed: <span class="pill">${r.calculatedScore}</span>
+// After: <div><b>${i + 1}. ${r.short}</b><br><span class="small">${r.best}</span></div>
 }
 
 function calculateScores() {
@@ -131,11 +136,20 @@ function calculateScores() {
     let eligible = true;
     let reasons = { discipline: "General/Other multidisciplinary coverage.", compatibility: "Supports your dataset size configuration.", features: [], requirements: "Compatible with default mandate selections.", licence: "Supports standard licensing frameworks." };
 
+    // Q06 [10]
+    const Q06_requirement = answers.Q06 ? answers.Q06[0] : "";
+    if (Q06_requirement !== undefined) {
+      if (Q06_requirement === "My funder requires a subject-specific repository." && r.type === "Subject-specific") { score += 10; }
+      if (Q06_requirement === "My journal requires a subject-specific repository." && r.type === "Subject-specific") { score += 10; }
+      if (Q06_requirement === "I prefer to use the institutional repository." && r.Q06_instituional_repo) { score += 10; }
+    }
+
     // Q01 [30]
     const sub = answers.Q01 ? answers.Q01[0] : "";
     const isGeneralist = r.subjects.includes("Other / General");
 
-    if (!isGeneralist && !r.subjects.includes(sub)) {
+    // Only apply subject eligibility filter once a subject has been chosen
+    if (sub && !isGeneralist && !r.subjects.includes(sub)) {
       eligible = false;
     }
     if (sub && r.subjects.includes(sub)) { score += 30; reasons.discipline = "Subject-specific repository for your field."; }
@@ -210,13 +224,6 @@ function calculateScores() {
       if (Q05_contain_code === "Yes, software/code is my primary research output") { score += r.Q05_code_as_output; }
     }
 
-    // Q06 [10]
-    const Q06_requirement = answers.Q06 ? answers.Q06[0] : "";
-    if (Q06_requirement !== undefined) {
-      if (Q06_requirement === "My funder requires a subject-specific repository." && r.type === "Subject-specific") { score += 10; }
-      if (Q06_requirement === "My journal requires a subject-specific repository." && r.type === "Subject-specific") { score += 10; }
-    }
-
     // Q07 [10]
     const Q07_license = answers.Q07 ? answers.Q07[0] : "";
     if (Q07_license !== undefined) {
@@ -236,10 +243,24 @@ function calculateScores() {
     .sort((a, b) => b.calculatedScore - a.calculatedScore);
 }
 
-function results() {
-  const ranked = calculateScores();
-  const top = ranked[0];
-  const alts = ranked.slice(1, 4);
+function results(preferInstitutional) {
+  let top, alts;
+  if (preferInstitutional) {
+    const cuhk = repositories.find(r => r.id === "REP001");
+    top = {
+      ...cuhk,
+      mappedReasons: {
+        discipline: "You selected the institutional repository preference.",
+        compatibility: "CUHK Research Data Repository supports CUHK-affiliated researchers.",
+        features: ["DOI", "Embargo", "Private sharing", "Collaborator access", "API"]
+      }
+    };
+    alts = [];
+  } else {
+    const ranked = calculateScores();
+    top = ranked[0];
+    alts = ranked.slice(1, 4);
+  }
 
   main.innerHTML = `
   <p class="small">Consultation complete!</p>
@@ -284,12 +305,12 @@ function results() {
     <br><br>
     <b>Disclaimer: </b>The repository recommendations provided in this table are based on the specified requirements and on information about repository characteristics available on their respective websites. The final selection of an appropriate data repository remains at the researcher's discretion.</div>
   
-  <h3>Alternative repositories to consider</h3>
+  ${preferInstitutional ? "" : `<h3>Alternative repositories to consider</h3>
   ${alts.map(a => `
     <div class="rankrow">
       <div><b><a href="${a.url}">${a.short}</a></b><br><span class="small">${a.best}</span></div>
       <span class="pill">Alternative</span>
-    </div>`).join("")}
+    </div>`).join("")}`}
     
   <div class="actions">
     <button class="button secondary" onclick="welcome()">Start Over</button>
@@ -302,12 +323,12 @@ function results() {
   <div class="repo-card">
     <strong>Your parameters</strong>
     <p class="small">
-    Discipline: ${answers.Q01 ? answers.Q01[0] : "—"}<br>
+    ${preferInstitutional ? `Preference: I prefer to use the institutional repository.` : `Discipline: ${answers.Q01 ? answers.Q01[0] : "—"}<br>
     Dataset capacity: ${answers.Q02 ? answers.Q02[0] : "—"}<br>
     File capacity: ${answers.Q03 ? answers.Q03[0] : "—"}<br>
     Features: ${(answers.Q04 || []).join(", ") || "—"}<br>
     Software/code inclusion: ${answers.Q05}<br>
-    Data licensing: ${answers.Q07}
+    Data licensing: ${answers.Q07}`}
 
     </p>
   </div>
@@ -321,10 +342,15 @@ function results() {
 }
 
 function copySummary() {
-  const ranked = calculateScores();
-  const top = ranked[0];
-  // const text = `Repository Adviser Prototype Summary\nRecommended: ${top.name}\nDiscipline: ${answers.Q01 ? answers.Q01[0] : "—"}\nCapacity: ${answers.Q02 ? answers.Q02[0] : "—"}`;
-  const text = `Repository Adviser Prototype Summary\nRecommended: ${top.name}\nDiscipline: ${answers.Q01 ? answers.Q01[0] : "—"}\nDataset capacity: ${answers.Q02 ? answers.Q02[0] : "—"}\nFile capacity: ${answers.Q03 ? answers.Q03[0] : "—"}\nFeatures: ${(answers.Q04 || []).join(", ") || "—"}\nSoftware/code inclusion: ${answers.Q05}\nData licensing: ${answers.Q07}`
+  const preferInstitutional = answers.Q06 && answers.Q06[0] === "I prefer to use the institutional repository.";
+  let text;
+  if (preferInstitutional) {
+    text = `Repository Adviser Prototype Summary\nRecommended: CUHK Research Data Repository\nPreference: I prefer to use the institutional repository.`;
+  } else {
+    const ranked = calculateScores();
+    const top = ranked[0];
+    text = `Repository Adviser Prototype Summary\nRecommended: ${top.name}\nDiscipline: ${answers.Q01 ? answers.Q01[0] : "—"}\nDataset capacity: ${answers.Q02 ? answers.Q02[0] : "—"}\nFile capacity: ${answers.Q03 ? answers.Q03[0] : "—"}\nFeatures: ${(answers.Q04 || []).join(", ") || "—"}\nSoftware/code inclusion: ${answers.Q05}\nData licensing: ${answers.Q07}`;
+  }
   navigator.clipboard.writeText(text).then(() => alert("Summary copied to clipboard!"));
 }
 
